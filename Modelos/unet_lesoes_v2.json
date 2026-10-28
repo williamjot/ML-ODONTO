@@ -1,0 +1,322 @@
+{
+  "melhor": {
+    "dice": 0.5810169331412512,
+    "sensibilidade": 0.6888888888888889,
+    "precisao": 1.0,
+    "falsos_por_imagem": 0.0,
+    "limiar": 0.5,
+    "f1": 0.8157894736842105
+  },
+  "sensibilidade_por_fp": {
+    "0.5": 0.7555555555555555,
+    "1": 0.7555555555555555,
+    "2": 0.7555555555555555,
+    "4": 0.7555555555555555
+  },
+  "curva": [
+    {
+      "dice": 0.579858264700249,
+      "sensibilidade": 0.7555555555555555,
+      "precisao": 0.8421052631578947,
+      "falsos_por_imagem": 0.3,
+      "limiar": 0.05,
+      "f1": 0.7964860907759882
+    },
+    {
+      "dice": 0.579858264700249,
+      "sensibilidade": 0.7555555555555555,
+      "precisao": 0.8421052631578947,
+      "falsos_por_imagem": 0.3,
+      "limiar": 0.075,
+      "f1": 0.7964860907759882
+    },
+    {
+      "dice": 0.5803206538824269,
+      "sensibilidade": 0.7555555555555555,
+      "precisao": 0.8648648648648649,
+      "falsos_por_imagem": 0.25,
+      "limiar": 0.1,
+      "f1": 0.8065233506300964
+    },
+    {
+      "dice": 0.5803206538824269,
+      "sensibilidade": 0.7555555555555555,
+      "precisao": 0.8648648648648649,
+      "falsos_por_imagem": 0.25,
+      "limiar": 0.125,
+      "f1": 0.8065233506300964
+    },
+    {
+      "dice": 0.5803206538824269,
+      "sensibilidade": 0.7555555555555555,
+      "precisao": 0.8648648648648649,
+      "falsos_por_imagem": 0.25,
+      "limiar": 0.15,
+      "f1": 0.8065233506300964
+    },
+    {
+      "dice": 0.5803206538824269,
+      "sensibilidade": 0.7555555555555555,
+      "precisao": 0.8648648648648649,
+      "falsos_por_imagem": 0.25,
+      "limiar": 0.175,
+      "f1": 0.8065233506300964
+    },
+    {
+      "dice": 0.5803206538824269,
+      "sensibilidade": 0.7555555555555555,
+      "precisao": 0.8648648648648649,
+      "falsos_por_imagem": 0.25,
+      "limiar": 0.2,
+      "f1": 0.8065233506300964
+    },
+    {
+      "dice": 0.5803206538824269,
+      "sensibilidade": 0.7555555555555555,
+      "precisao": 0.8648648648648649,
+      "falsos_por_imagem": 0.25,
+      "limiar": 0.225,
+      "f1": 0.8065233506300964
+    },
+    {
+      "dice": 0.5803206538824269,
+      "sensibilidade": 0.7555555555555555,
+      "precisao": 0.8648648648648649,
+      "falsos_por_imagem": 0.25,
+      "limiar": 0.25,
+      "f1": 0.8065233506300964
+    },
+    {
+      "dice": 0.5803206538824269,
+      "sensibilidade": 0.7555555555555555,
+      "precisao": 0.8648648648648649,
+      "falsos_por_imagem": 0.25,
+      "limiar": 0.275,
+      "f1": 0.8065233506300964
+    },
+    {
+      "dice": 0.5803206538824269,
+      "sensibilidade": 0.7555555555555555,
+      "precisao": 0.8648648648648649,
+      "falsos_por_imagem": 0.25,
+      "limiar": 0.3,
+      "f1": 0.8065233506300964
+    },
+    {
+      "dice": 0.5803206538824269,
+      "sensibilidade": 0.7555555555555555,
+      "precisao": 0.8648648648648649,
+      "falsos_por_imagem": 0.25,
+      "limiar": 0.325,
+      "f1": 0.8065233506300964
+    },
+    {
+      "dice": 0.5803206538824269,
+      "sensibilidade": 0.7555555555555555,
+      "precisao": 0.8648648648648649,
+      "falsos_por_imagem": 0.25,
+      "limiar": 0.35,
+      "f1": 0.8065233506300964
+    },
+    {
+      "dice": 0.5803206538824269,
+      "sensibilidade": 0.7555555555555555,
+      "precisao": 0.8648648648648649,
+      "falsos_por_imagem": 0.25,
+      "limiar": 0.375,
+      "f1": 0.8065233506300964
+    },
+    {
+      "dice": 0.5807820318685288,
+      "sensibilidade": 0.7333333333333333,
+      "precisao": 0.8857142857142857,
+      "falsos_por_imagem": 0.2,
+      "limiar": 0.4,
+      "f1": 0.8023529411764706
+    },
+    {
+      "dice": 0.5807820318685288,
+      "sensibilidade": 0.7333333333333333,
+      "precisao": 0.8857142857142857,
+      "falsos_por_imagem": 0.2,
+      "limiar": 0.425,
+      "f1": 0.8023529411764706
+    },
+    {
+      "dice": 0.5807820318685288,
+      "sensibilidade": 0.7333333333333333,
+      "precisao": 0.8857142857142857,
+      "falsos_por_imagem": 0.2,
+      "limiar": 0.45,
+      "f1": 0.8023529411764706
+    },
+    {
+      "dice": 0.5820750647109577,
+      "sensibilidade": 0.7333333333333333,
+      "precisao": 0.9117647058823529,
+      "falsos_por_imagem": 0.15,
+      "limiar": 0.475,
+      "f1": 0.8128724672228844
+    },
+    {
+      "dice": 0.5810169331412512,
+      "sensibilidade": 0.6888888888888889,
+      "precisao": 1.0,
+      "falsos_por_imagem": 0.0,
+      "limiar": 0.5,
+      "f1": 0.8157894736842105
+    },
+    {
+      "dice": 0.5788937420521773,
+      "sensibilidade": 0.6666666666666666,
+      "precisao": 1.0,
+      "falsos_por_imagem": 0.0,
+      "limiar": 0.525,
+      "f1": 0.8
+    },
+    {
+      "dice": 0.5788937420521773,
+      "sensibilidade": 0.6666666666666666,
+      "precisao": 1.0,
+      "falsos_por_imagem": 0.0,
+      "limiar": 0.55,
+      "f1": 0.8
+    },
+    {
+      "dice": 0.5788937420521773,
+      "sensibilidade": 0.6666666666666666,
+      "precisao": 1.0,
+      "falsos_por_imagem": 0.0,
+      "limiar": 0.575,
+      "f1": 0.8
+    },
+    {
+      "dice": 0.5788937420521773,
+      "sensibilidade": 0.6666666666666666,
+      "precisao": 1.0,
+      "falsos_por_imagem": 0.0,
+      "limiar": 0.6,
+      "f1": 0.8
+    },
+    {
+      "dice": 0.5788937420521773,
+      "sensibilidade": 0.6666666666666666,
+      "precisao": 1.0,
+      "falsos_por_imagem": 0.0,
+      "limiar": 0.625,
+      "f1": 0.8
+    },
+    {
+      "dice": 0.5788937420521773,
+      "sensibilidade": 0.6666666666666666,
+      "precisao": 1.0,
+      "falsos_por_imagem": 0.0,
+      "limiar": 0.65,
+      "f1": 0.8
+    },
+    {
+      "dice": 0.5788937420521773,
+      "sensibilidade": 0.6666666666666666,
+      "precisao": 1.0,
+      "falsos_por_imagem": 0.0,
+      "limiar": 0.675,
+      "f1": 0.8
+    },
+    {
+      "dice": 0.5788937420521773,
+      "sensibilidade": 0.6666666666666666,
+      "precisao": 1.0,
+      "falsos_por_imagem": 0.0,
+      "limiar": 0.7,
+      "f1": 0.8
+    },
+    {
+      "dice": 0.5788937420521773,
+      "sensibilidade": 0.6666666666666666,
+      "precisao": 1.0,
+      "falsos_por_imagem": 0.0,
+      "limiar": 0.725,
+      "f1": 0.8
+    },
+    {
+      "dice": 0.5788937420521773,
+      "sensibilidade": 0.6666666666666666,
+      "precisao": 1.0,
+      "falsos_por_imagem": 0.0,
+      "limiar": 0.75,
+      "f1": 0.8
+    },
+    {
+      "dice": 0.5788937420521773,
+      "sensibilidade": 0.6666666666666666,
+      "precisao": 1.0,
+      "falsos_por_imagem": 0.0,
+      "limiar": 0.775,
+      "f1": 0.8
+    },
+    {
+      "dice": 0.5788937420521773,
+      "sensibilidade": 0.6666666666666666,
+      "precisao": 1.0,
+      "falsos_por_imagem": 0.0,
+      "limiar": 0.8,
+      "f1": 0.8
+    },
+    {
+      "dice": 0.5788937420521773,
+      "sensibilidade": 0.6666666666666666,
+      "precisao": 1.0,
+      "falsos_por_imagem": 0.0,
+      "limiar": 0.825,
+      "f1": 0.8
+    },
+    {
+      "dice": 0.5788937420521773,
+      "sensibilidade": 0.6666666666666666,
+      "precisao": 1.0,
+      "falsos_por_imagem": 0.0,
+      "limiar": 0.85,
+      "f1": 0.8
+    },
+    {
+      "dice": 0.5788937420521773,
+      "sensibilidade": 0.6666666666666666,
+      "precisao": 1.0,
+      "falsos_por_imagem": 0.0,
+      "limiar": 0.875,
+      "f1": 0.8
+    },
+    {
+      "dice": 0.5753153481300826,
+      "sensibilidade": 0.6444444444444445,
+      "precisao": 1.0,
+      "falsos_por_imagem": 0.0,
+      "limiar": 0.9,
+      "f1": 0.7837837837837839
+    },
+    {
+      "dice": 0.5753153481300826,
+      "sensibilidade": 0.6444444444444445,
+      "precisao": 1.0,
+      "falsos_por_imagem": 0.0,
+      "limiar": 0.925,
+      "f1": 0.7837837837837839
+    },
+    {
+      "dice": 0.5753153481300826,
+      "sensibilidade": 0.6444444444444445,
+      "precisao": 1.0,
+      "falsos_por_imagem": 0.0,
+      "limiar": 0.95,
+      "f1": 0.7837837837837839
+    }
+  ],
+  "meta": {
+    "iteracao": 10000,
+    "dice_validacao": 0.6895935730208788,
+    "versao_atributos": 2,
+    "largura": 2000,
+    "perda": "tversky",
+    "n_treino": 3724
+  }
+}

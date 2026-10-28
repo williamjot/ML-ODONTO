@@ -1,0 +1,14 @@
+ML ODONTO — Detecção de lesões periapicais em radiografias panorâmicas
+Copyright (c) 2026 William Jota, Laboratório de Estudos Eletromagnéticos (LEMAG), Universidade de Brasília.
+
+Uso acadêmico e não comercial.
+
+É permitido usar, copiar, modificar e redistribuir este código para fins de ensino e pesquisa sem fins
+lucrativos, desde que este aviso seja mantido e o trabalho original seja citado. O uso comercial, total ou
+parcial, depende de autorização prévia e por escrito do autor.
+
+Os modelos treinados com o conjunto DENTEX herdam a licença CC BY-NC-SA 4.0 desse conjunto
+(https://creativecommons.org/licenses/by-nc-sa/4.0/). O conjunto de Hanói é distribuído sob CC BY 4.0.
+
+O software apoia a revisão por especialistas e NÃO substitui o diagnóstico clínico. É fornecido "como está",
+sem garantias de qualquer tipo; o autor não se responsabiliza por decisões clínicas tomadas com base nele.

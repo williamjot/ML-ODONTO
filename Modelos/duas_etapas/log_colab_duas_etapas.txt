@@ -1,0 +1,74 @@
+Treino das duas etapas no Google Colab (GPU Tesla T4, 2 CPUs), 26-27/10/2026
+Fase 1: DENTEX 584 treino / 50 validação (59s)
+Fase 2: 116668 ápices em 3924 imagens (mediana 30 por imagem)
+Fase 3: 3924/3924 imagens (237s)
+Fase 4: recortes de treino 14734 com lesão / 14882 sem; validação 765 / 800
+Fim. Modelos em MyDrive/ML_Odonto_DuasEtapas: localizador_apices.pt e lesoes_recortes.pt
+
+# etapa,iteracao,metrica,valor
+1,500,f1_apice_20px,0.449
+1,1000,f1_apice_20px,0.511
+1,1500,f1_apice_20px,0.502
+1,2000,f1_apice_20px,0.540
+1,2500,f1_apice_20px,0.545
+1,3000,f1_apice_20px,0.529
+1,500,recall_apice_20px,0.432
+1,1000,recall_apice_20px,0.435
+1,1500,recall_apice_20px,0.457
+1,2000,recall_apice_20px,0.499
+1,2500,recall_apice_20px,0.521
+1,3000,recall_apice_20px,0.509
+1,500,precisao_apice_20px,0.467
+1,1000,precisao_apice_20px,0.620
+1,1500,precisao_apice_20px,0.557
+1,2000,precisao_apice_20px,0.590
+1,2500,precisao_apice_20px,0.571
+1,3000,precisao_apice_20px,0.550
+4,500,dice_validacao,0.404
+4,1000,dice_validacao,0.578
+4,1500,dice_validacao,0.555
+4,2000,dice_validacao,0.641
+4,2500,dice_validacao,0.680
+4,3000,dice_validacao,0.700
+4,3500,dice_validacao,0.726
+4,4000,dice_validacao,0.745
+4,4500,dice_validacao,0.765
+4,5000,dice_validacao,0.765
+4,5500,dice_validacao,0.771
+4,6000,dice_validacao,0.771
+1,250,perda,0.5468
+1,500,perda,0.4210
+1,750,perda,0.3641
+1,1000,perda,0.3453
+1,1250,perda,0.3224
+1,1500,perda,0.3121
+1,1750,perda,0.3079
+1,2000,perda,0.2878
+1,2250,perda,0.2799
+1,2500,perda,0.2777
+1,2750,perda,0.2733
+1,3000,perda,0.2773
+4,250,perda,1.063
+4,500,perda,0.815
+4,750,perda,0.590
+4,1000,perda,0.552
+4,1250,perda,0.459
+4,1500,perda,0.478
+4,1750,perda,0.445
+4,2000,perda,0.426
+4,2250,perda,0.366
+4,2500,perda,0.361
+4,2750,perda,0.357
+4,3000,perda,0.340
+4,3250,perda,0.312
+4,3500,perda,0.280
+4,3750,perda,0.326
+4,4000,perda,0.266
+4,4250,perda,0.273
+4,4500,perda,0.236
+4,4750,perda,0.227
+4,5000,perda,0.241
+4,5250,perda,0.238
+4,5500,perda,0.229
+4,5750,perda,0.235
+4,6000,perda,0.262

@@ -1,0 +1,43 @@
+unet_lesoes_v2:
+  arquivo: unet_lesoes_v2.safetensors
+  n_tensores: 278
+  meta:
+    iteracao: 10000.0
+    dice_validacao: 0.6895935730208788
+    versao_atributos: 2.0
+    largura: 2000.0
+    perda: tversky
+    n_treino: 3724.0
+  tipo: unet_lesoes
+  largura: 2000
+  limiar: 0.5
+  ativo: true
+  descricao: U-Net v2 (2.000 px, Tversky), treinada com Hanói
+unet_lesoes:
+  arquivo: unet_lesoes.safetensors
+  n_tensores: 278
+  meta:
+    iteracao: 5500.0
+    dice_validacao: 0.6820666003516239
+    versao_atributos: 2.0
+    largura: 1400.0
+    n_treino: 3724.0
+  tipo: unet_lesoes
+  largura: 1400
+  limiar: 0.5
+  ativo: false
+  descricao: U-Net v1 (1.400 px)
+localizador_apices:
+  arquivo: localizador_apices.safetensors
+  n_tensores: 278
+  meta:
+    iteracao: 2500.0
+    recall_20px: 0.5212085996513655
+    precisao_20px: 0.5706106870229007
+    f1: 0.5447919829942302
+    sigma: 6.0
+    largura: 1400.0
+  tipo: localizador_apices
+  largura: 1400
+  ativo: false
+  descricao: Localizador de ápices (DENTEX)

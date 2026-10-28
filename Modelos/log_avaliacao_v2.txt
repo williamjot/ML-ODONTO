@@ -1,0 +1,36 @@
+  1/20 (17.3s/imagem)
+  2/20 (15.9s/imagem)
+  3/20 (15.3s/imagem)
+  4/20 (15.1s/imagem)
+  5/20 (15.0s/imagem)
+  6/20 (14.9s/imagem)
+  7/20 (16.7s/imagem)
+  8/20 (17.4s/imagem)
+  9/20 (17.1s/imagem)
+  10/20 (16.9s/imagem)
+  11/20 (16.8s/imagem)
+  12/20 (17.2s/imagem)
+  13/20 (17.7s/imagem)
+  14/20 (18.1s/imagem)
+  15/20 (18.5s/imagem)
+  16/20 (18.9s/imagem)
+  17/20 (19.3s/imagem)
+  18/20 (19.5s/imagem)
+  19/20 (19.9s/imagem)
+  20/20 (20.1s/imagem)
+B: 4% c/ 0.5 FP/img | 4% c/ 1 FP/img | 7% c/ 2 FP/img | 11% c/ 4 FP/img || melhor F1 0.08 (limiar 0.325: sens 16%, prec 6%, 5.8 FP/img, Dice 0.04)
+C: 4% c/ 0.5 FP/img | 11% c/ 1 FP/img | 11% c/ 2 FP/img | 11% c/ 4 FP/img || melhor F1 0.15 (limiar 0.65: sens 11%, prec 25%, 0.6 FP/img, Dice 0.14)
+UNET: 69% c/ 0.5 FP/img | 69% c/ 1 FP/img | 69% c/ 2 FP/img | 69% c/ 4 FP/img || melhor F1 0.78 (limiar 0.5: sens 64%, prec 100%, 0.0 FP/img, Dice 0.57)
+UNET_FT: 69% c/ 0.5 FP/img | 69% c/ 1 FP/img | 69% c/ 2 FP/img | 69% c/ 4 FP/img || melhor F1 0.80 (limiar 0.6: sens 67%, prec 100%, 0.0 FP/img, Dice 0.60)
+UNET_V2: 76% c/ 0.5 FP/img | 76% c/ 1 FP/img | 76% c/ 2 FP/img | 76% c/ 4 FP/img || melhor F1 0.82 (limiar 0.5: sens 69%, prec 100%, 0.0 FP/img, Dice 0.58)
+# Comparação: Random Forest × U-Net (20 panorâmicas marcadas, 45 lesões)
+
+Cada paciente é avaliado por um modelo que não o viu no treino. Lesão achada = alguma região prevista com ≥20% de sobreposição com ela. Sensibilidade em função de falsos positivos (FP) por imagem; depois, o ponto de melhor F1.
+
+| Modelo | Sens. 0,5 FP | Sens. 1 FP | Sens. 2 FP | Sens. 4 FP | F1 | Sens. | Precisão | FP/img | Dice | Limiar |
+|---|---|---|---|---|---|---|---|---|---|---|
+| RF B (só Hanói) | 4% | 4% | 7% | 11% | 0.08 | 16% | 6% | 5.8 | 0.04 | 0.325 |
+| RF C (Hanói + nossas, val. cruzada) | 4% | 11% | 11% | 11% | 0.15 | 11% | 25% | 0.6 | 0.14 | 0.65 |
+| U-Net (só Hanói) | 69% | 69% | 69% | 69% | 0.78 | 64% | 100% | 0.0 | 0.57 | 0.5 |
+| U-Net + ajuste fino nas nossas (val. cruzada) | 69% | 69% | 69% | 69% | 0.80 | 67% | 100% | 0.0 | 0.60 | 0.6 |
+| U-Net v2 (2000 px + Tversky, só Hanói) | 76% | 76% | 76% | 76% | 0.82 | 69% | 100% | 0.0 | 0.58 | 0.5 |

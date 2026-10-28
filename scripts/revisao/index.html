@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Revisão de lesões</title>
+<style>
+:root{--fundo:#141414;--painel:#1e1e1e;--linha:#333;--texto:#eee;--sub:#9a9a9a;
+  --pend:#ff9a1f;--conf:#33c46b;--rej:#ff4d4d;--duv:#f2d43d;--add:#3fa9ff}
+*{box-sizing:border-box}
+body{margin:0;height:100vh;display:grid;grid-template-columns:270px 1fr 300px;background:var(--fundo);
+  color:var(--texto);font:13px system-ui,sans-serif;overflow:hidden}
+aside{background:var(--painel);border-right:1px solid var(--linha);display:flex;flex-direction:column;min-height:0}
+aside.dir{border-right:0;border-left:1px solid var(--linha);padding:12px;gap:10px;overflow:auto}
+h2{font-size:13px;margin:0;color:var(--sub);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.topo{padding:12px;display:flex;flex-direction:column;gap:8px;border-bottom:1px solid var(--linha)}
+.barra{height:6px;background:#333;border-radius:3px;overflow:hidden}.barra i{display:block;height:100%;background:var(--conf)}
+.filtros{display:flex;gap:4px}.filtros button{flex:1}
+#lista{overflow:auto;flex:1}
+.item{padding:7px 12px;border-bottom:1px solid #262626;cursor:pointer;display:flex;gap:8px;align-items:center}
+.item:hover{background:#262626}.item.atual{background:#2d2d2d;box-shadow:inset 3px 0 var(--pend)}
+.item .nome{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.item .n{color:var(--pend);font-weight:600}
+.bola{width:9px;height:9px;border-radius:50%;flex:none;border:1px solid #666}
+.bola.concluida{background:var(--conf);border-color:var(--conf)}.bola.parcial{background:var(--duv);border-color:var(--duv)}
+.grupo{padding:8px 12px 4px;color:var(--sub);font-size:11px;text-transform:uppercase;letter-spacing:.04em}
+main{position:relative;min-width:0}
+canvas{display:block;width:100%;height:100%;cursor:grab}
+canvas.desenho{cursor:crosshair}
+#dica{position:absolute;left:12px;bottom:10px;color:var(--sub);font-size:12px;background:#000a;padding:4px 8px;border-radius:4px}
+#titulo{position:absolute;left:12px;top:10px;background:#000b;padding:4px 10px;border-radius:4px;font-weight:600}
+button,input,textarea{background:#2a2a2a;color:var(--texto);border:1px solid #444;border-radius:6px;padding:6px 9px;font:inherit}
+button{cursor:pointer}button:hover{border-color:#777}button.ativo{border-color:var(--pend);color:var(--pend)}
+textarea{width:100%;min-height:60px;resize:vertical}input[type=text]{width:100%}
+.det{border:1px solid #333;border-radius:8px;padding:8px;display:flex;flex-direction:column;gap:6px;cursor:pointer}
+.det.sel{border-color:var(--texto)}
+.det .cab{display:flex;justify-content:space-between}
+.det .botoes{display:flex;gap:4px}.det .botoes button{flex:1;padding:5px 0}
+.b-conf.on{background:var(--conf);color:#000;border-color:var(--conf)}
+.b-rej.on{background:var(--rej);color:#000;border-color:var(--rej)}
+.b-duv.on{background:var(--duv);color:#000;border-color:var(--duv)}
+.linha{display:flex;gap:6px;align-items:center}
+.grande{width:100%;padding:10px;font-weight:600}
+#concluir{background:#1f4d30;border-color:var(--conf)}
+#salvo{color:var(--sub);font-size:12px;min-height:16px}
+.legenda span{display:inline-flex;align-items:center;gap:4px;margin-right:8px;font-size:12px;color:var(--sub)}
+.legenda i{width:10px;height:10px;border-radius:2px;display:inline-block}
+kbd{background:#333;border-radius:3px;padding:0 4px;font-size:11px}
+</style>
+</head>
+<body>
+<aside>
+  <div class="topo">
+    <h2>Revisão das detecções</h2>
+    <div id="progresso">—</div>
+    <div class="barra"><i id="barra" style="width:0"></i></div>
+    <div class="filtros">
+      <button data-f="todas" class="ativo">Todas</button><button data-f="pendente">Pendentes</button><button data-f="concluida">Concluídas</button>
+    </div>
+    <input id="busca" type="text" placeholder="Buscar nome…">
+  </div>
+  <div id="lista"></div>
+</aside>
+
+<main>
+  <canvas id="tela"></canvas>
+  <div id="titulo">—</div>
+  <div id="dica">Roda do mouse: zoom · arrastar: mover · <kbd>H</kbd> ocultar marcações · <kbd>0</kbd> ajustar à tela</div>
+</main>
+
+<aside class="dir">
+  <div><h2>Revisor</h2><input id="revisor" type="text" placeholder="Seu nome"></div>
+  <div class="legenda">
+    <span><i style="background:var(--pend)"></i>a decidir</span><span><i style="background:var(--conf)"></i>confirmada</span>
+    <span><i style="background:var(--rej)"></i>rejeitada</span><span><i style="background:var(--duv)"></i>dúvida</span>
+    <span><i style="background:var(--add)"></i>adicionada</span>
+  </div>
+  <h2>Detecções da U-Net</h2>
+  <div id="dets"></div>
+  <div id="semdet" style="color:var(--sub);display:none">Nenhuma detecção nesta imagem. Se houver lesão, marque abaixo.</div>
+  <h2>Lesões não detectadas</h2>
+  <button id="marcar" class="grande">✏️ Marcar lesão não detectada <kbd>M</kbd></button>
+  <div id="adds"></div>
+  <div class="linha"><label><input id="inadequada" type="checkbox"> Imagem inadequada para avaliação</label></div>
+  <div><h2>Observações</h2><textarea id="obs"></textarea></div>
+  <div class="linha" style="gap:6px">
+    <span style="color:var(--sub)">Contraste</span><input id="contraste" type="range" min="60" max="220" value="100" style="flex:1">
+    <span style="color:var(--sub)">Brilho</span><input id="brilho" type="range" min="60" max="160" value="100" style="flex:1">
+  </div>
+  <button id="concluir" class="grande">✓ Concluir e ir para a próxima <kbd>Enter</kbd></button>
+  <div class="linha"><button id="ant" style="flex:1">← Anterior</button><button id="prox" style="flex:1">Próxima →</button></div>
+  <div id="salvo"></div>
+  <div style="color:var(--sub);font-size:12px;line-height:1.5">
+    Atalhos para a detecção selecionada: <kbd>1</kbd> confirmar · <kbd>2</kbd> rejeitar · <kbd>3</kbd> dúvida ·
+    <kbd>Tab</kbd> próxima detecção. Tudo é salvo automaticamente neste computador.
+  </div>
+</aside>
+
+<script>
+const $ = s => document.querySelector(s);
+const COR = {pend: '#ff9a1f', confirmada: '#33c46b', rejeitada: '#ff4d4d', duvida: '#f2d43d', add: '#3fa9ff'};
+let lista = [], filtro = 'todas', atual = null, dados = null, img = null;
+let decisoes = {}, adicionadas = [], sel = 0, ocultar = false, desenhando = false, traco = null;
+let vista = {s: 1, x: 0, y: 0}, arrasto = null, timerSalvar = null, sujo = false;
+const tela = $('#tela'), ctx = tela.getContext('2d');
+
+try { $('#revisor').value = localStorage.getItem('revisor') || ''; } catch (e) {}
+$('#revisor').oninput = () => { try { localStorage.setItem('revisor', $('#revisor').value); } catch (e) {} agendarSalvar(); };
+
+async function carregarLista() {
+  lista = await (await fetch('/api/lista')).json();
+  desenharLista();
+}
+function desenharLista() {
+  const q = $('#busca').value.toLowerCase();
+  const conc = lista.filter(i => i.status === 'concluida').length;
+  $('#progresso').textContent = `${conc} de ${lista.length} imagens concluídas`;
+  $('#barra').style.width = (100 * conc / lista.length) + '%';
+  const nomesGrupo = ['1º Amostra aleatória (revise todas estas primeiro)', 'Depois: 4 ou mais detecções', 'Depois: nenhuma detecção', 'Demais imagens'];
+  let html = '', grupo = -1;
+  for (const i of lista) {
+    if (filtro !== 'todas' && (filtro === 'concluida') !== (i.status === 'concluida')) continue;
+    if (q && !i.arquivo.toLowerCase().includes(q)) continue;
+    if (i.grupo !== grupo) { grupo = i.grupo; html += `<div class="grupo">${nomesGrupo[grupo]}</div>`; }
+    html += `<div class="item ${i.id === atual ? 'atual' : ''}" data-id="${i.id}"><span class="bola ${i.status}"></span>` +
+            `<span class="nome">${i.arquivo.replace(/</g, '&lt;')}</span><span class="n">${i.n}</span></div>`;
+  }
+  $('#lista').innerHTML = html;
+  const el = $('#lista .atual'); if (el) el.scrollIntoView({block: 'nearest'});
+}
+$('#lista').onclick = e => { const it = e.target.closest('.item'); if (it) abrir(it.dataset.id); };
+document.querySelectorAll('.filtros button').forEach(b => b.onclick = () => {
+  filtro = b.dataset.f; document.querySelectorAll('.filtros button').forEach(x => x.classList.toggle('ativo', x === b)); desenharLista();
+});
+$('#busca').oninput = desenharLista;
+
+async function abrir(id) {
+  if (atual && sujo) await salvar();
+  atual = id; sujo = false; dados = await (await fetch('/api/imagem/' + id)).json();
+  const r = dados.revisao || {};
+  decisoes = r.decisoes || {}; adicionadas = r.adicionadas || []; sel = 0;
+  $('#obs').value = r.observacoes || ''; $('#inadequada').checked = !!r.imagem_inadequada;
+  if (!$('#revisor').value && r.revisor) $('#revisor').value = r.revisor;
+  $('#titulo').textContent = dados.arquivo; $('#salvo').textContent = r.atualizado ? 'Salvo em ' + r.atualizado : '';
+  img = new Image(); img.onload = () => { ajustar(); desenhar(); }; img.src = '/img/' + id + '.jpg';
+  painel(); desenharLista();
+}
+
+function painel() {
+  const d = dados.deteccoes;
+  $('#semdet').style.display = d.length ? 'none' : 'block';
+  $('#dets').innerHTML = d.map((x, k) => {
+    const dec = decisoes[x.indice] || '';
+    return `<div class="det ${k === sel ? 'sel' : ''}" data-k="${k}"><div class="cab"><b>Lesão ${x.indice}</b>` +
+      `<span style="color:var(--sub)">confiança ${x.confianca == null ? '—' : x.confianca.toFixed(2).replace('.', ',')}</span></div>` +
+      `<div class="botoes"><button class="b-conf ${dec === 'confirmada' ? 'on' : ''}" data-d="confirmada">✓ Confirma</button>` +
+      `<button class="b-rej ${dec === 'rejeitada' ? 'on' : ''}" data-d="rejeitada">✗ Rejeita</button>` +
+      `<button class="b-duv ${dec === 'duvida' ? 'on' : ''}" data-d="duvida">? Dúvida</button></div></div>`;
+  }).join('');
+  $('#adds').innerHTML = adicionadas.map((p, k) =>
+    `<div class="linha" style="justify-content:space-between"><span style="color:var(--add)">Adicionada ${k + 1}</span>` +
+    `<button data-del="${k}">Remover</button></div>`).join('');
+}
+$('#dets').onclick = e => {
+  const card = e.target.closest('.det'); if (!card) return;
+  sel = +card.dataset.k; const b = e.target.closest('button');
+  if (b) decidir(b.dataset.d); else { painel(); desenhar(); }
+};
+$('#adds').onclick = e => { const b = e.target.closest('[data-del]'); if (b) { adicionadas.splice(+b.dataset.del, 1); painel(); desenhar(); agendarSalvar(); } };
+function decidir(d) {
+  const x = dados.deteccoes[sel]; if (!x) return;
+  decisoes[x.indice] = decisoes[x.indice] === d ? undefined : d;
+  if (!decisoes[x.indice]) delete decisoes[x.indice];
+  painel(); desenhar(); agendarSalvar();
+}
+
+// ---------- tela ----------
+function redimensionar() { const r = tela.getBoundingClientRect(); tela.width = r.width * devicePixelRatio; tela.height = r.height * devicePixelRatio; desenhar(); }
+window.addEventListener('resize', redimensionar);
+function ajustar() {
+  if (!img) return;
+  const s = Math.min(tela.width / img.width, tela.height / img.height) * .97;
+  vista = {s, x: (tela.width - img.width * s) / 2, y: (tela.height - img.height * s) / 2};
+}
+const k = () => img ? img.width / dados.largura : 1; // original -> exibição
+function caminho(pontos) { const p = new Path2D(); pontos.forEach(([x, y], i) => i ? p.lineTo(x * k(), y * k()) : p.moveTo(x * k(), y * k())); p.closePath(); return p; }
+function desenhar() {
+  ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.fillStyle = '#000'; ctx.fillRect(0, 0, tela.width, tela.height);
+  if (!img || !img.complete) return;
+  ctx.setTransform(vista.s, 0, 0, vista.s, vista.x, vista.y);
+  ctx.filter = `contrast(${$('#contraste').value}%) brightness(${$('#brilho').value}%)`;
+  ctx.drawImage(img, 0, 0); ctx.filter = 'none';
+  if (ocultar) return;
+  const lw = 2.2 / vista.s;
+  dados.deteccoes.forEach((x, i) => {
+    const cor = COR[decisoes[x.indice]] || COR.pend;
+    ctx.lineWidth = i === sel ? lw * 2 : lw; ctx.strokeStyle = cor; ctx.setLineDash(decisoes[x.indice] === 'rejeitada' ? [6 / vista.s, 5 / vista.s] : []);
+    ctx.stroke(caminho(x.pontos)); ctx.setLineDash([]);
+    ctx.fillStyle = cor; ctx.font = `${15 / vista.s}px system-ui`;
+    const [cx, cy] = x.centro; ctx.fillText(String(x.indice), (cx * k()) + 14 / vista.s, (cy * k()) - 14 / vista.s);
+  });
+  ctx.lineWidth = lw; ctx.strokeStyle = COR.add; ctx.fillStyle = COR.add + '33';
+  adicionadas.forEach(p => { const c = caminho(p); ctx.fill(c); ctx.stroke(c); });
+  if (traco && traco.length > 1) { ctx.beginPath(); traco.forEach(([x, y], i) => i ? ctx.lineTo(x * k(), y * k()) : ctx.moveTo(x * k(), y * k())); ctx.stroke(); }
+}
+function paraImagem(ev) { // coordenadas ORIGINAIS da radiografia
+  const r = tela.getBoundingClientRect(), px = (ev.clientX - r.left) * devicePixelRatio, py = (ev.clientY - r.top) * devicePixelRatio;
+  return [((px - vista.x) / vista.s) / k(), ((py - vista.y) / vista.s) / k()];
+}
+tela.onwheel = ev => {
+  ev.preventDefault(); const r = tela.getBoundingClientRect();
+  const px = (ev.clientX - r.left) * devicePixelRatio, py = (ev.clientY - r.top) * devicePixelRatio, f = Math.exp(-ev.deltaY * .0015);
+  vista.x = px - (px - vista.x) * f; vista.y = py - (py - vista.y) * f; vista.s *= f; desenhar();
+};
+tela.onmousedown = ev => {
+  if (desenhando) { traco = [paraImagem(ev)]; return; }
+  const [ox, oy] = paraImagem(ev);
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  const i = dados ? dados.deteccoes.findIndex(x => ctx.isPointInPath(caminho(x.pontos), ox * k(), oy * k())) : -1;
+  if (i >= 0) { sel = i; painel(); desenhar(); return; }
+  arrasto = {x: ev.clientX, y: ev.clientY, vx: vista.x, vy: vista.y}; tela.style.cursor = 'grabbing';
+};
+window.onmousemove = ev => {
+  if (traco) { traco.push(paraImagem(ev)); desenhar(); return; }
+  if (!arrasto) return;
+  vista.x = arrasto.vx + (ev.clientX - arrasto.x) * devicePixelRatio; vista.y = arrasto.vy + (ev.clientY - arrasto.y) * devicePixelRatio; desenhar();
+};
+window.onmouseup = () => {
+  if (traco) {
+    if (traco.length >= 5) { adicionadas.push(traco.map(([x, y]) => [Math.round(x), Math.round(y)])); agendarSalvar(); }
+    traco = null; modoDesenho(false); painel(); desenhar();
+  }
+  arrasto = null; tela.style.cursor = '';
+};
+function modoDesenho(on) { desenhando = on; tela.classList.toggle('desenho', on); $('#marcar').classList.toggle('ativo', on);
+  $('#dica').textContent = on ? 'Desenhe o contorno da lesão segurando o botão do mouse · Esc cancela'
+    : 'Roda do mouse: zoom · arrastar: mover · H ocultar marcações · 0 ajustar à tela'; }
+$('#marcar').onclick = () => modoDesenho(!desenhando);
+$('#contraste').oninput = $('#brilho').oninput = desenhar;
+
+// ---------- salvar ----------
+function agendarSalvar() { sujo = true; clearTimeout(timerSalvar); timerSalvar = setTimeout(salvar, 600); $('#salvo').textContent = 'Salvando…'; }
+async function salvar(concluida) {
+  if (!atual || !dados) return;
+  clearTimeout(timerSalvar);
+  const ja = (lista.find(i => i.id === atual) || {}).status === 'concluida';
+  const corpo = {revisor: $('#revisor').value, decisoes, adicionadas, observacoes: $('#obs').value,
+                 imagem_inadequada: $('#inadequada').checked, concluida: concluida === undefined ? ja : concluida};
+  try {
+    const r = await (await fetch('/api/revisao/' + atual, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(corpo)})).json();
+    $('#salvo').textContent = 'Salvo em ' + r.atualizado; sujo = false;
+    const it = lista.find(i => i.id === atual); if (it) it.status = corpo.concluida ? 'concluida' : 'parcial';
+    desenharLista();
+  } catch (e) { $('#salvo').textContent = 'ERRO ao salvar — o servidor está rodando?'; }
+}
+$('#obs').oninput = agendarSalvar; $('#inadequada').onchange = agendarSalvar;
+function vizinha(passo) { const i = lista.findIndex(x => x.id === atual); return lista[Math.min(lista.length - 1, Math.max(0, i + passo))]; }
+async function concluir() {
+  const falta = dados.deteccoes.filter(x => !decisoes[x.indice]).length;
+  if (falta && !$('#inadequada').checked && !confirm(`${falta} detecção(ões) sem decisão. Concluir mesmo assim?`)) return;
+  await salvar(true); const n = lista.find(i => i.status !== 'concluida' && i.id !== atual) || vizinha(1); abrir(n.id);
+}
+$('#concluir').onclick = concluir;
+$('#prox').onclick = () => abrir(vizinha(1).id); $('#ant').onclick = () => abrir(vizinha(-1).id);
+document.addEventListener('keydown', ev => {
+  if (ev.target.tagName === 'TEXTAREA' || (ev.target.tagName === 'INPUT' && ev.target.type === 'text')) return;
+  const n = dados ? dados.deteccoes.length : 0;
+  if (ev.key === '1') decidir('confirmada'); else if (ev.key === '2') decidir('rejeitada'); else if (ev.key === '3') decidir('duvida');
+  else if (ev.key === 'Tab' && n) { ev.preventDefault(); sel = (sel + (ev.shiftKey ? n - 1 : 1)) % n; painel(); desenhar(); }
+  else if (ev.key === 'h' || ev.key === 'H') { ocultar = !ocultar; desenhar(); }
+  else if (ev.key === '0') { ajustar(); desenhar(); }
+  else if (ev.key === 'm' || ev.key === 'M') modoDesenho(!desenhando);
+  else if (ev.key === 'Escape') { traco = null; modoDesenho(false); desenhar(); }
+  else if (ev.key === 'Enter') { ev.preventDefault(); concluir(); }
+  else if (ev.key === 'ArrowRight') abrir(vizinha(1).id); else if (ev.key === 'ArrowLeft') abrir(vizinha(-1).id);
+});
+window.addEventListener('beforeunload', () => { if (atual && sujo) salvar(); });
+
+redimensionar();
+carregarLista().then(() => { const p = lista.find(i => i.status !== 'concluida') || lista[0]; abrir(p.id); });
+</script>
+</body>
+</html>
