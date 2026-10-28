@@ -1,0 +1,999 @@
+{
+  "variante": "C",
+  "limiar": 0.65,
+  "validacao": {
+    "B1": {
+      "melhor": {
+        "dice": 0.04334553005501084,
+        "sensibilidade": 0.15555555555555556,
+        "precisao": 0.05343511450381679,
+        "falsos_por_imagem": 6.2,
+        "limiar": 0.4,
+        "f1": 0.07954545454545454
+      },
+      "sensibilidade_por_fp": {
+        "0.5": 0.044444444444444446,
+        "1": 0.044444444444444446,
+        "2": 0.06666666666666667,
+        "4": 0.08888888888888889
+      },
+      "curva": [
+        {
+          "dice": 0.01493785823988271,
+          "sensibilidade": 0.044444444444444446,
+          "precisao": 0.00625,
+          "falsos_por_imagem": 15.9,
+          "limiar": 0.05,
+          "f1": 0.010958904109589041
+        },
+        {
+          "dice": 0.01639421243728669,
+          "sensibilidade": 0.044444444444444446,
+          "precisao": 0.0072992700729927005,
+          "falsos_por_imagem": 13.6,
+          "limiar": 0.075,
+          "f1": 0.012539184952978056
+        },
+        {
+          "dice": 0.017524570786601835,
+          "sensibilidade": 0.022222222222222223,
+          "precisao": 0.0038022813688212928,
+          "falsos_por_imagem": 13.1,
+          "limiar": 0.1,
+          "f1": 0.006493506493506493
+        },
+        {
+          "dice": 0.01913558556807531,
+          "sensibilidade": 0.022222222222222223,
+          "precisao": 0.0038314176245210726,
+          "falsos_por_imagem": 13.0,
+          "limiar": 0.125,
+          "f1": 0.006535947712418301
+        },
+        {
+          "dice": 0.021023032816828862,
+          "sensibilidade": 0.044444444444444446,
+          "precisao": 0.007751937984496124,
+          "falsos_por_imagem": 12.8,
+          "limiar": 0.15,
+          "f1": 0.0132013201320132
+        },
+        {
+          "dice": 0.02333572490053399,
+          "sensibilidade": 0.044444444444444446,
+          "precisao": 0.0078125,
+          "falsos_por_imagem": 12.7,
+          "limiar": 0.175,
+          "f1": 0.013289036544850499
+        },
+        {
+          "dice": 0.02571823256257064,
+          "sensibilidade": 0.044444444444444446,
+          "precisao": 0.008333333333333333,
+          "falsos_por_imagem": 11.9,
+          "limiar": 0.2,
+          "f1": 0.014035087719298248
+        },
+        {
+          "dice": 0.028632019046138893,
+          "sensibilidade": 0.06666666666666667,
+          "precisao": 0.012987012987012988,
+          "falsos_por_imagem": 11.4,
+          "limiar": 0.225,
+          "f1": 0.021739130434782608
+        },
+        {
+          "dice": 0.029884120768817954,
+          "sensibilidade": 0.06666666666666667,
+          "precisao": 0.013824884792626729,
+          "falsos_por_imagem": 10.7,
+          "limiar": 0.25,
+          "f1": 0.022900763358778626
+        },
+        {
+          "dice": 0.032166659575692806,
+          "sensibilidade": 0.1111111111111111,
+          "precisao": 0.024390243902439025,
+          "falsos_por_imagem": 10.0,
+          "limiar": 0.275,
+          "f1": 0.04
+        },
+        {
+          "dice": 0.03290314690702851,
+          "sensibilidade": 0.1111111111111111,
+          "precisao": 0.026041666666666668,
+          "falsos_por_imagem": 9.35,
+          "limiar": 0.3,
+          "f1": 0.042194092827004225
+        },
+        {
+          "dice": 0.03555737857651909,
+          "sensibilidade": 0.1111111111111111,
+          "precisao": 0.02824858757062147,
+          "falsos_por_imagem": 8.6,
+          "limiar": 0.325,
+          "f1": 0.04504504504504505
+        },
+        {
+          "dice": 0.03681337249582313,
+          "sensibilidade": 0.15555555555555556,
+          "precisao": 0.0440251572327044,
+          "falsos_por_imagem": 7.6,
+          "limiar": 0.35,
+          "f1": 0.06862745098039215
+        },
+        {
+          "dice": 0.038691301219349085,
+          "sensibilidade": 0.15555555555555556,
+          "precisao": 0.04895104895104895,
+          "falsos_por_imagem": 6.8,
+          "limiar": 0.375,
+          "f1": 0.07446808510638298
+        },
+        {
+          "dice": 0.04334553005501084,
+          "sensibilidade": 0.15555555555555556,
+          "precisao": 0.05343511450381679,
+          "falsos_por_imagem": 6.2,
+          "limiar": 0.4,
+          "f1": 0.07954545454545454
+        },
+        {
+          "dice": 0.04325193860871851,
+          "sensibilidade": 0.13333333333333333,
+          "precisao": 0.049586776859504134,
+          "falsos_por_imagem": 5.75,
+          "limiar": 0.425,
+          "f1": 0.07228915662650602
+        },
+        {
+          "dice": 0.042241919617258254,
+          "sensibilidade": 0.08888888888888889,
+          "precisao": 0.03669724770642202,
+          "falsos_por_imagem": 5.25,
+          "limiar": 0.45,
+          "f1": 0.05194805194805195
+        },
+        {
+          "dice": 0.04257128170877788,
+          "sensibilidade": 0.08888888888888889,
+          "precisao": 0.038834951456310676,
+          "falsos_por_imagem": 4.95,
+          "limiar": 0.475,
+          "f1": 0.05405405405405406
+        },
+        {
+          "dice": 0.039594733231128464,
+          "sensibilidade": 0.06666666666666667,
+          "precisao": 0.03225806451612903,
+          "falsos_por_imagem": 4.5,
+          "limiar": 0.5,
+          "f1": 0.043478260869565216
+        },
+        {
+          "dice": 0.042924493089013055,
+          "sensibilidade": 0.08888888888888889,
+          "precisao": 0.046511627906976744,
+          "falsos_por_imagem": 4.1,
+          "limiar": 0.525,
+          "f1": 0.06106870229007635
+        },
+        {
+          "dice": 0.046548988431202434,
+          "sensibilidade": 0.06666666666666667,
+          "precisao": 0.039473684210526314,
+          "falsos_por_imagem": 3.65,
+          "limiar": 0.55,
+          "f1": 0.049586776859504134
+        },
+        {
+          "dice": 0.05129370197235934,
+          "sensibilidade": 0.08888888888888889,
+          "precisao": 0.05970149253731343,
+          "falsos_por_imagem": 3.15,
+          "limiar": 0.575,
+          "f1": 0.07142857142857142
+        },
+        {
+          "dice": 0.0491138517853095,
+          "sensibilidade": 0.08888888888888889,
+          "precisao": 0.05263157894736842,
+          "falsos_por_imagem": 2.7,
+          "limiar": 0.6,
+          "f1": 0.06611570247933883
+        },
+        {
+          "dice": 0.047163376892347224,
+          "sensibilidade": 0.06666666666666667,
+          "precisao": 0.04,
+          "falsos_por_imagem": 2.4,
+          "limiar": 0.625,
+          "f1": 0.05
+        },
+        {
+          "dice": 0.0513243347282413,
+          "sensibilidade": 0.06666666666666667,
+          "precisao": 0.0425531914893617,
+          "falsos_por_imagem": 2.25,
+          "limiar": 0.65,
+          "f1": 0.051948051948051945
+        },
+        {
+          "dice": 0.057584528806679275,
+          "sensibilidade": 0.06666666666666667,
+          "precisao": 0.046511627906976744,
+          "falsos_por_imagem": 2.05,
+          "limiar": 0.675,
+          "f1": 0.0547945205479452
+        },
+        {
+          "dice": 0.06322475418857366,
+          "sensibilidade": 0.06666666666666667,
+          "precisao": 0.05555555555555555,
+          "falsos_por_imagem": 1.7,
+          "limiar": 0.7,
+          "f1": 0.0606060606060606
+        },
+        {
+          "dice": 0.06252811173031035,
+          "sensibilidade": 0.044444444444444446,
+          "precisao": 0.06451612903225806,
+          "falsos_por_imagem": 1.45,
+          "limiar": 0.725,
+          "f1": 0.05263157894736842
+        },
+        {
+          "dice": 0.07027756534257051,
+          "sensibilidade": 0.044444444444444446,
+          "precisao": 0.07692307692307693,
+          "falsos_por_imagem": 1.2,
+          "limiar": 0.75,
+          "f1": 0.056338028169014086
+        },
+        {
+          "dice": 0.0946214415505754,
+          "sensibilidade": 0.044444444444444446,
+          "precisao": 0.1111111111111111,
+          "falsos_por_imagem": 0.8,
+          "limiar": 0.775,
+          "f1": 0.06349206349206349
+        },
+        {
+          "dice": 0.09966828429264697,
+          "sensibilidade": 0.044444444444444446,
+          "precisao": 0.14285714285714285,
+          "falsos_por_imagem": 0.6,
+          "limiar": 0.8,
+          "f1": 0.06779661016949153
+        },
+        {
+          "dice": 0.11305580345424956,
+          "sensibilidade": 0.044444444444444446,
+          "precisao": 0.2,
+          "falsos_por_imagem": 0.4,
+          "limiar": 0.825,
+          "f1": 0.07272727272727272
+        },
+        {
+          "dice": 0.046112887832158465,
+          "sensibilidade": 0.022222222222222223,
+          "precisao": 0.5,
+          "falsos_por_imagem": 0.05,
+          "limiar": 0.85,
+          "f1": 0.0425531914893617
+        },
+        {
+          "dice": 0.0,
+          "sensibilidade": 0.0,
+          "precisao": 0.0,
+          "falsos_por_imagem": 0.0,
+          "limiar": 0.875,
+          "f1": 0.0
+        },
+        {
+          "dice": 0.0,
+          "sensibilidade": 0.0,
+          "precisao": 0.0,
+          "falsos_por_imagem": 0.0,
+          "limiar": 0.9,
+          "f1": 0.0
+        },
+        {
+          "dice": 0.0,
+          "sensibilidade": 0.0,
+          "precisao": 0.0,
+          "falsos_por_imagem": 0.0,
+          "limiar": 0.925,
+          "f1": 0.0
+        },
+        {
+          "dice": 0.0,
+          "sensibilidade": 0.0,
+          "precisao": 0.0,
+          "falsos_por_imagem": 0.0,
+          "limiar": 0.95,
+          "f1": 0.0
+        }
+      ]
+    },
+    "B": {
+      "melhor": {
+        "dice": 0.03783006422014714,
+        "sensibilidade": 0.15555555555555556,
+        "precisao": 0.05737704918032787,
+        "falsos_por_imagem": 5.75,
+        "limiar": 0.325,
+        "f1": 0.08383233532934131
+      },
+      "sensibilidade_por_fp": {
+        "0.5": 0.044444444444444446,
+        "1": 0.044444444444444446,
+        "2": 0.06666666666666667,
+        "4": 0.1111111111111111
+      },
+      "curva": [
+        {
+          "dice": 0.013842888988896778,
+          "sensibilidade": 0.0,
+          "precisao": 0.0,
+          "falsos_por_imagem": 10.45,
+          "limiar": 0.05,
+          "f1": 0.0
+        },
+        {
+          "dice": 0.014280363462756702,
+          "sensibilidade": 0.0,
+          "precisao": 0.0,
+          "falsos_por_imagem": 7.6,
+          "limiar": 0.075,
+          "f1": 0.0
+        },
+        {
+          "dice": 0.015658170007948856,
+          "sensibilidade": 0.0,
+          "precisao": 0.0,
+          "falsos_por_imagem": 7.5,
+          "limiar": 0.1,
+          "f1": 0.0
+        },
+        {
+          "dice": 0.017497651233256774,
+          "sensibilidade": 0.0,
+          "precisao": 0.0,
+          "falsos_por_imagem": 7.6,
+          "limiar": 0.125,
+          "f1": 0.0
+        },
+        {
+          "dice": 0.019138420900008456,
+          "sensibilidade": 0.0,
+          "precisao": 0.0,
+          "falsos_por_imagem": 8.05,
+          "limiar": 0.15,
+          "f1": 0.0
+        },
+        {
+          "dice": 0.021986249341710895,
+          "sensibilidade": 0.022222222222222223,
+          "precisao": 0.00684931506849315,
+          "falsos_por_imagem": 7.25,
+          "limiar": 0.175,
+          "f1": 0.010471204188481674
+        },
+        {
+          "dice": 0.02491126837462957,
+          "sensibilidade": 0.044444444444444446,
+          "precisao": 0.014814814814814815,
+          "falsos_por_imagem": 6.65,
+          "limiar": 0.2,
+          "f1": 0.022222222222222223
+        },
+        {
+          "dice": 0.026717382915554297,
+          "sensibilidade": 0.06666666666666667,
+          "precisao": 0.022556390977443608,
+          "falsos_por_imagem": 6.5,
+          "limiar": 0.225,
+          "f1": 0.033707865168539325
+        },
+        {
+          "dice": 0.030007629441594522,
+          "sensibilidade": 0.08888888888888889,
+          "precisao": 0.03225806451612903,
+          "falsos_por_imagem": 6.0,
+          "limiar": 0.25,
+          "f1": 0.047337278106508875
+        },
+        {
+          "dice": 0.03026956182397856,
+          "sensibilidade": 0.1111111111111111,
+          "precisao": 0.040983606557377046,
+          "falsos_por_imagem": 5.85,
+          "limiar": 0.275,
+          "f1": 0.059880239520958084
+        },
+        {
+          "dice": 0.03376003654713986,
+          "sensibilidade": 0.13333333333333333,
+          "precisao": 0.04878048780487805,
+          "falsos_por_imagem": 5.85,
+          "limiar": 0.3,
+          "f1": 0.07142857142857142
+        },
+        {
+          "dice": 0.03783006422014714,
+          "sensibilidade": 0.15555555555555556,
+          "precisao": 0.05737704918032787,
+          "falsos_por_imagem": 5.75,
+          "limiar": 0.325,
+          "f1": 0.08383233532934131
+        },
+        {
+          "dice": 0.04012395821487174,
+          "sensibilidade": 0.1111111111111111,
+          "precisao": 0.044642857142857144,
+          "falsos_por_imagem": 5.35,
+          "limiar": 0.35,
+          "f1": 0.06369426751592357
+        },
+        {
+          "dice": 0.04588049181850925,
+          "sensibilidade": 0.1111111111111111,
+          "precisao": 0.053763440860215055,
+          "falsos_por_imagem": 4.4,
+          "limiar": 0.375,
+          "f1": 0.07246376811594202
+        },
+        {
+          "dice": 0.04934096268806786,
+          "sensibilidade": 0.1111111111111111,
+          "precisao": 0.0641025641025641,
+          "falsos_por_imagem": 3.65,
+          "limiar": 0.4,
+          "f1": 0.08130081300813008
+        },
+        {
+          "dice": 0.048064373790989975,
+          "sensibilidade": 0.06666666666666667,
+          "precisao": 0.05,
+          "falsos_por_imagem": 2.85,
+          "limiar": 0.425,
+          "f1": 0.05714285714285715
+        },
+        {
+          "dice": 0.05344628220608059,
+          "sensibilidade": 0.06666666666666667,
+          "precisao": 0.05357142857142857,
+          "falsos_por_imagem": 2.65,
+          "limiar": 0.45,
+          "f1": 0.05940594059405941
+        },
+        {
+          "dice": 0.055884759867091294,
+          "sensibilidade": 0.044444444444444446,
+          "precisao": 0.04,
+          "falsos_por_imagem": 2.4,
+          "limiar": 0.475,
+          "f1": 0.042105263157894736
+        },
+        {
+          "dice": 0.05667590638218515,
+          "sensibilidade": 0.06666666666666667,
+          "precisao": 0.045454545454545456,
+          "falsos_por_imagem": 2.1,
+          "limiar": 0.5,
+          "f1": 0.05405405405405406
+        },
+        {
+          "dice": 0.06301225851249538,
+          "sensibilidade": 0.06666666666666667,
+          "precisao": 0.05128205128205128,
+          "falsos_por_imagem": 1.85,
+          "limiar": 0.525,
+          "f1": 0.057971014492753624
+        },
+        {
+          "dice": 0.06600988754018557,
+          "sensibilidade": 0.022222222222222223,
+          "precisao": 0.027777777777777776,
+          "falsos_por_imagem": 1.75,
+          "limiar": 0.55,
+          "f1": 0.024691358024691357
+        },
+        {
+          "dice": 0.07324807896193578,
+          "sensibilidade": 0.044444444444444446,
+          "precisao": 0.06451612903225806,
+          "falsos_por_imagem": 1.45,
+          "limiar": 0.575,
+          "f1": 0.05263157894736842
+        },
+        {
+          "dice": 0.08808436887595011,
+          "sensibilidade": 0.044444444444444446,
+          "precisao": 0.08,
+          "falsos_por_imagem": 1.15,
+          "limiar": 0.6,
+          "f1": 0.05714285714285715
+        },
+        {
+          "dice": 0.10677138757491916,
+          "sensibilidade": 0.044444444444444446,
+          "precisao": 0.09523809523809523,
+          "falsos_por_imagem": 0.95,
+          "limiar": 0.625,
+          "f1": 0.06060606060606061
+        },
+        {
+          "dice": 0.1200224841406508,
+          "sensibilidade": 0.044444444444444446,
+          "precisao": 0.11764705882352941,
+          "falsos_por_imagem": 0.75,
+          "limiar": 0.65,
+          "f1": 0.06451612903225806
+        },
+        {
+          "dice": 0.10212869185517617,
+          "sensibilidade": 0.022222222222222223,
+          "precisao": 0.07142857142857142,
+          "falsos_por_imagem": 0.65,
+          "limiar": 0.675,
+          "f1": 0.03389830508474576
+        },
+        {
+          "dice": 0.08679036424015603,
+          "sensibilidade": 0.044444444444444446,
+          "precisao": 0.25,
+          "falsos_por_imagem": 0.3,
+          "limiar": 0.7,
+          "f1": 0.07547169811320754
+        },
+        {
+          "dice": 0.014335711401265312,
+          "sensibilidade": 0.0,
+          "precisao": 0.0,
+          "falsos_por_imagem": 0.15,
+          "limiar": 0.725,
+          "f1": 0.0
+        },
+        {
+          "dice": 0.015036001694197373,
+          "sensibilidade": 0.0,
+          "precisao": 0.0,
+          "falsos_por_imagem": 0.1,
+          "limiar": 0.75,
+          "f1": 0.0
+        },
+        {
+          "dice": 0.0,
+          "sensibilidade": 0.0,
+          "precisao": 0.0,
+          "falsos_por_imagem": 0.0,
+          "limiar": 0.775,
+          "f1": 0.0
+        },
+        {
+          "dice": 0.0,
+          "sensibilidade": 0.0,
+          "precisao": 0.0,
+          "falsos_por_imagem": 0.0,
+          "limiar": 0.8,
+          "f1": 0.0
+        },
+        {
+          "dice": 0.0,
+          "sensibilidade": 0.0,
+          "precisao": 0.0,
+          "falsos_por_imagem": 0.0,
+          "limiar": 0.825,
+          "f1": 0.0
+        },
+        {
+          "dice": 0.0,
+          "sensibilidade": 0.0,
+          "precisao": 0.0,
+          "falsos_por_imagem": 0.0,
+          "limiar": 0.85,
+          "f1": 0.0
+        },
+        {
+          "dice": 0.0,
+          "sensibilidade": 0.0,
+          "precisao": 0.0,
+          "falsos_por_imagem": 0.0,
+          "limiar": 0.875,
+          "f1": 0.0
+        },
+        {
+          "dice": 0.0,
+          "sensibilidade": 0.0,
+          "precisao": 0.0,
+          "falsos_por_imagem": 0.0,
+          "limiar": 0.9,
+          "f1": 0.0
+        },
+        {
+          "dice": 0.0,
+          "sensibilidade": 0.0,
+          "precisao": 0.0,
+          "falsos_por_imagem": 0.0,
+          "limiar": 0.925,
+          "f1": 0.0
+        },
+        {
+          "dice": 0.0,
+          "sensibilidade": 0.0,
+          "precisao": 0.0,
+          "falsos_por_imagem": 0.0,
+          "limiar": 0.95,
+          "f1": 0.0
+        }
+      ]
+    },
+    "C": {
+      "melhor": {
+        "dice": 0.14212500464218072,
+        "sensibilidade": 0.1111111111111111,
+        "precisao": 0.25,
+        "falsos_por_imagem": 0.6,
+        "limiar": 0.65,
+        "f1": 0.15384615384615383
+      },
+      "sensibilidade_por_fp": {
+        "0.5": 0.044444444444444446,
+        "1": 0.1111111111111111,
+        "2": 0.1111111111111111,
+        "4": 0.1111111111111111
+      },
+      "curva": [
+        {
+          "dice": 0.014686619929547891,
+          "sensibilidade": 0.044444444444444446,
+          "precisao": 0.007220216606498195,
+          "falsos_por_imagem": 13.75,
+          "limiar": 0.05,
+          "f1": 0.012422360248447206
+        },
+        {
+          "dice": 0.01602340749177115,
+          "sensibilidade": 0.044444444444444446,
+          "precisao": 0.008888888888888889,
+          "falsos_por_imagem": 11.15,
+          "limiar": 0.075,
+          "f1": 0.014814814814814815
+        },
+        {
+          "dice": 0.017006715614156325,
+          "sensibilidade": 0.022222222222222223,
+          "precisao": 0.004672897196261682,
+          "falsos_por_imagem": 10.65,
+          "limiar": 0.1,
+          "f1": 0.007722007722007721
+        },
+        {
+          "dice": 0.019005959495774098,
+          "sensibilidade": 0.022222222222222223,
+          "precisao": 0.0048543689320388345,
+          "falsos_por_imagem": 10.25,
+          "limiar": 0.125,
+          "f1": 0.00796812749003984
+        },
+        {
+          "dice": 0.021314728906070238,
+          "sensibilidade": 0.022222222222222223,
+          "precisao": 0.004629629629629629,
+          "falsos_por_imagem": 10.75,
+          "limiar": 0.15,
+          "f1": 0.007662835249042145
+        },
+        {
+          "dice": 0.02395799824512873,
+          "sensibilidade": 0.022222222222222223,
+          "precisao": 0.0049261083743842365,
+          "falsos_por_imagem": 10.1,
+          "limiar": 0.175,
+          "f1": 0.008064516129032258
+        },
+        {
+          "dice": 0.025795349477385834,
+          "sensibilidade": 0.022222222222222223,
+          "precisao": 0.0055248618784530384,
+          "falsos_por_imagem": 9.0,
+          "limiar": 0.2,
+          "f1": 0.008849557522123894
+        },
+        {
+          "dice": 0.028377209627321605,
+          "sensibilidade": 0.022222222222222223,
+          "precisao": 0.006211180124223602,
+          "falsos_por_imagem": 8.0,
+          "limiar": 0.225,
+          "f1": 0.009708737864077669
+        },
+        {
+          "dice": 0.03119015229499872,
+          "sensibilidade": 0.044444444444444446,
+          "precisao": 0.013333333333333334,
+          "falsos_por_imagem": 7.4,
+          "limiar": 0.25,
+          "f1": 0.020512820512820516
+        },
+        {
+          "dice": 0.035493187921345606,
+          "sensibilidade": 0.1111111111111111,
+          "precisao": 0.03333333333333333,
+          "falsos_por_imagem": 7.25,
+          "limiar": 0.275,
+          "f1": 0.05128205128205128
+        },
+        {
+          "dice": 0.03750967804269176,
+          "sensibilidade": 0.08888888888888889,
+          "precisao": 0.027586206896551724,
+          "falsos_por_imagem": 7.05,
+          "limiar": 0.3,
+          "f1": 0.042105263157894736
+        },
+        {
+          "dice": 0.03487133547819722,
+          "sensibilidade": 0.08888888888888889,
+          "precisao": 0.030303030303030304,
+          "falsos_por_imagem": 6.4,
+          "limiar": 0.325,
+          "f1": 0.04519774011299435
+        },
+        {
+          "dice": 0.03989615527259241,
+          "sensibilidade": 0.08888888888888889,
+          "precisao": 0.03361344537815126,
+          "falsos_por_imagem": 5.75,
+          "limiar": 0.35,
+          "f1": 0.048780487804878044
+        },
+        {
+          "dice": 0.039910886677558294,
+          "sensibilidade": 0.08888888888888889,
+          "precisao": 0.038461538461538464,
+          "falsos_por_imagem": 5.0,
+          "limiar": 0.375,
+          "f1": 0.05369127516778525
+        },
+        {
+          "dice": 0.043168374875317134,
+          "sensibilidade": 0.06666666666666667,
+          "precisao": 0.03333333333333333,
+          "falsos_por_imagem": 4.35,
+          "limiar": 0.4,
+          "f1": 0.04444444444444444
+        },
+        {
+          "dice": 0.05110968368721386,
+          "sensibilidade": 0.1111111111111111,
+          "precisao": 0.05405405405405406,
+          "falsos_por_imagem": 3.5,
+          "limiar": 0.425,
+          "f1": 0.07272727272727272
+        },
+        {
+          "dice": 0.047640332728836214,
+          "sensibilidade": 0.06666666666666667,
+          "precisao": 0.03225806451612903,
+          "falsos_por_imagem": 3.0,
+          "limiar": 0.45,
+          "f1": 0.043478260869565216
+        },
+        {
+          "dice": 0.05045774061791782,
+          "sensibilidade": 0.06666666666666667,
+          "precisao": 0.04081632653061224,
+          "falsos_por_imagem": 2.35,
+          "limiar": 0.475,
+          "f1": 0.050632911392405056
+        },
+        {
+          "dice": 0.05752606394315126,
+          "sensibilidade": 0.06666666666666667,
+          "precisao": 0.045454545454545456,
+          "falsos_por_imagem": 2.1,
+          "limiar": 0.5,
+          "f1": 0.05405405405405406
+        },
+        {
+          "dice": 0.0704585013248386,
+          "sensibilidade": 0.08888888888888889,
+          "precisao": 0.08108108108108109,
+          "falsos_por_imagem": 1.7,
+          "limiar": 0.525,
+          "f1": 0.08480565371024736
+        },
+        {
+          "dice": 0.08072075428561751,
+          "sensibilidade": 0.08888888888888889,
+          "precisao": 0.08571428571428572,
+          "falsos_por_imagem": 1.6,
+          "limiar": 0.55,
+          "f1": 0.08727272727272728
+        },
+        {
+          "dice": 0.0831470539259962,
+          "sensibilidade": 0.044444444444444446,
+          "precisao": 0.06896551724137931,
+          "falsos_por_imagem": 1.35,
+          "limiar": 0.575,
+          "f1": 0.05405405405405405
+        },
+        {
+          "dice": 0.0935662039110315,
+          "sensibilidade": 0.06666666666666667,
+          "precisao": 0.10714285714285714,
+          "falsos_por_imagem": 1.25,
+          "limiar": 0.6,
+          "f1": 0.0821917808219178
+        },
+        {
+          "dice": 0.12110088840016771,
+          "sensibilidade": 0.1111111111111111,
+          "precisao": 0.18181818181818182,
+          "falsos_por_imagem": 0.9,
+          "limiar": 0.625,
+          "f1": 0.13793103448275862
+        },
+        {
+          "dice": 0.14212500464218072,
+          "sensibilidade": 0.1111111111111111,
+          "precisao": 0.25,
+          "falsos_por_imagem": 0.6,
+          "limiar": 0.65,
+          "f1": 0.15384615384615383
+        },
+        {
+          "dice": 0.08547227328787843,
+          "sensibilidade": 0.044444444444444446,
+          "precisao": 0.18181818181818182,
+          "falsos_por_imagem": 0.45,
+          "limiar": 0.675,
+          "f1": 0.07142857142857142
+        },
+        {
+          "dice": 0.023896659964415385,
+          "sensibilidade": 0.0,
+          "precisao": 0.0,
+          "falsos_por_imagem": 0.35,
+          "limiar": 0.7,
+          "f1": 0.0
+        },
+        {
+          "dice": 0.013760134371265222,
+          "sensibilidade": 0.0,
+          "precisao": 0.0,
+          "falsos_por_imagem": 0.2,
+          "limiar": 0.725,
+          "f1": 0.0
+        },
+        {
+          "dice": 0.0,
+          "sensibilidade": 0.0,
+          "precisao": 0.0,
+          "falsos_por_imagem": 0.1,
+          "limiar": 0.75,
+          "f1": 0.0
+        },
+        {
+          "dice": 0.0,
+          "sensibilidade": 0.0,
+          "precisao": 0.0,
+          "falsos_por_imagem": 0.1,
+          "limiar": 0.775,
+          "f1": 0.0
+        },
+        {
+          "dice": 0.0,
+          "sensibilidade": 0.0,
+          "precisao": 0.0,
+          "falsos_por_imagem": 0.0,
+          "limiar": 0.8,
+          "f1": 0.0
+        },
+        {
+          "dice": 0.0,
+          "sensibilidade": 0.0,
+          "precisao": 0.0,
+          "falsos_por_imagem": 0.0,
+          "limiar": 0.825,
+          "f1": 0.0
+        },
+        {
+          "dice": 0.0,
+          "sensibilidade": 0.0,
+          "precisao": 0.0,
+          "falsos_por_imagem": 0.0,
+          "limiar": 0.85,
+          "f1": 0.0
+        },
+        {
+          "dice": 0.0,
+          "sensibilidade": 0.0,
+          "precisao": 0.0,
+          "falsos_por_imagem": 0.0,
+          "limiar": 0.875,
+          "f1": 0.0
+        },
+        {
+          "dice": 0.0,
+          "sensibilidade": 0.0,
+          "precisao": 0.0,
+          "falsos_por_imagem": 0.0,
+          "limiar": 0.9,
+          "f1": 0.0
+        },
+        {
+          "dice": 0.0,
+          "sensibilidade": 0.0,
+          "precisao": 0.0,
+          "falsos_por_imagem": 0.0,
+          "limiar": 0.925,
+          "f1": 0.0
+        },
+        {
+          "dice": 0.0,
+          "sensibilidade": 0.0,
+          "precisao": 0.0,
+          "falsos_por_imagem": 0.0,
+          "limiar": 0.95,
+          "f1": 0.0
+        }
+      ]
+    }
+  },
+  "importancia_atributos": {
+    "pos_y": 0.1319,
+    "dist_centro_x": 0.131,
+    "pos_x": 0.0499,
+    "desvio_8": 0.042,
+    "desvio_4": 0.0406,
+    "gradiente_8": 0.0325,
+    "hessiana_4_l1": 0.03,
+    "dog_8_32": 0.0298,
+    "contexto_8_40_0": 0.0278,
+    "hessiana_8_l1": 0.0256,
+    "gauss_16": 0.0255,
+    "contexto_4_40_0": 0.0247,
+    "dog_32_64": 0.0245,
+    "contexto_8_20_0": 0.0224,
+    "hessiana_8_l2": 0.0222,
+    "contexto_8_-40_0": 0.022,
+    "contexto_4_20_0": 0.0201,
+    "contexto_4_-40_0": 0.0196,
+    "contexto_8_-20_0": 0.0194,
+    "gauss_8": 0.0178,
+    "contexto_8_0_25": 0.0173,
+    "contexto_8_0_-25": 0.0168,
+    "gradiente_4": 0.0162,
+    "contexto_4_0_-25": 0.016,
+    "contexto_4_0_25": 0.0155,
+    "contexto_4_-20_0": 0.0153,
+    "dog_2_8": 0.0151,
+    "gauss_4": 0.0151,
+    "dog_4_16": 0.0146,
+    "gauss_2": 0.0144,
+    "gradiente_2": 0.0143,
+    "hessiana_4_l2": 0.0132,
+    "hessiana_2_l1": 0.0117,
+    "gauss_1": 0.0111,
+    "gradiente_1": 0.0101,
+    "hessiana_2_l2": 0.0086,
+    "brilho": 0.0078,
+    "dog_1_4": 0.0075
+  },
+  "n_hanoi": 800,
+  "n_mineracao": 300,
+  "rf": {
+    "n_estimators": 100,
+    "max_depth": 20,
+    "min_samples_leaf": 10,
+    "max_features": "sqrt",
+    "max_samples": 200000,
+    "n_jobs": 4
+  },
+  "versao_atributos": 2
+}

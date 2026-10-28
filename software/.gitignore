@@ -1,0 +1,6 @@
+# dados locais de teste (contêm caminhos e revisões de pacientes)
+teste_dados/
+logs/
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal

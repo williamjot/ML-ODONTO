@@ -1,0 +1,74 @@
+# =====================================================================
+# ML ODONTO — o que NÃO vai para o repositório
+# =====================================================================
+
+# ---- Dados de pacientes (nunca versionar) ---------------------------
+Dados/
+HUB/
+Treinamento/
+Revisao/revisoes/
+Revisao/mascaras/
+Revisao/negativos/
+Revisao/conferencia/
+Revisao/lesoes_perdidas/
+
+# Resultados: máscaras, sobreposições e mapas de probabilidade são de pacientes.
+# Ficam só o resumo da comparação e os gráficos agregados (sem radiografias).
+Resultados/*
+!Resultados/comparacao.md
+!Resultados/figuras/
+Resultados/figuras/*
+!Resultados/figuras/R/
+Resultados/figuras/R/*.tiff
+Resultados/figuras/R/*_source.csv
+
+# ---- Conjuntos públicos externos (baixar da fonte, ver Externos/LEIAME.md)
+Externos/*
+!Externos/LEIAME.md
+
+# ---- Pesos de modelos e amostras grandes (distribuídos à parte, ver README)
+*.pt
+*.pth
+*.safetensors
+*.joblib
+*.npz
+*.npy
+Modelos/dentes/
+Modelos/duas_etapas/apices_hanoi.json
+
+# ---- Artigo: figuras e PDF com radiografias de pacientes -------------
+Artigo/figuras/*.png
+Artigo/layout_latex/overleaf/figuras/*.png
+Artigo/layout_latex/*.pdf
+Artigo/layout_latex/overleaf/*.pdf
+Artigo/layout_latex/overleaf/overleaf.zip
+# arquivos auxiliares do LaTeX
+*.aux
+*.log
+*.out
+*.toc
+*.synctex*
+*.fdb_latexmk
+*.fls
+Artigo/layout_latex/build.log
+
+# ---- Software: dados locais de teste e registros ---------------------
+software/teste_dados/
+software/logs/
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+
+# ---- Ambientes e caches ---------------------------------------------
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.Rhistory
+.RData
+.Rproj.user/
+renv/library/
+*.zip
+
+# ---- Configurações locais do Claude Code (mantém as skills do projeto)
+.claude/*
+!.claude/skills/

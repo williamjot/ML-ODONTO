@@ -1,0 +1,18 @@
+PROJETO PARA OVERLEAF
+
+1. No Overleaf, crie um projeto usando Upload Project e selecione overleaf.zip.
+2. Nas configurações do projeto, selecione LuaLaTeX como compilador.
+3. Selecione main.tex como documento principal e clique em Recompile.
+
+ARQUIVOS EDITÁVEIS
+- main.tex: texto completo, tabelas, legendas e referências do artigo.
+- preambulo.tex: fontes, margens, cores, cabeçalhos e demais estilos.
+- figuras/: as sete figuras efetivamente usadas no artigo.
+- fonts/: as oito fontes OTF usadas pelo estilo.
+
+As referências estão escritas diretamente no final de main.tex; não há arquivo .bib.
+O projeto é independente das pastas originais do computador.
+
+AJUSTES NESTA CÓPIA
+- Caminhos de fontes e figuras adaptados para pastas internas ao projeto.
+- Arquivo principal renomeado para main.tex (cópia de ../artigo_lesoes_periapicais.tex).

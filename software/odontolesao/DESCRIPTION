@@ -1,0 +1,40 @@
+Package: odontolesao
+Title: ML ODONTO: Revisão, Avaliação e Treinamento de Detecção de Lesões Periapicais
+Version: 0.1.0
+Authors@R: person("William", "Jota", role = c("aut", "cre"), email = "williamteytey14@gmail.com",
+    comment = "Laboratório de Estudos Eletromagnéticos (LEMAG), Universidade de Brasília")
+Description: Software local para revisão por especialistas das lesões periapicais detectadas por
+    redes neurais em radiografias panorâmicas, auditoria das lesões não encontradas, aplicação e
+    ajuste fino dos modelos, gráficos e relatórios atualizáveis. Nenhuma imagem sai do computador.
+License: file LICENSE
+Encoding: UTF-8
+Language: pt-BR
+Depends: R (>= 4.3)
+Imports:
+    shiny (>= 1.8.1),
+    bslib (>= 0.7.0),
+    bsicons,
+    htmltools,
+    DT,
+    DBI,
+    RSQLite,
+    jsonlite,
+    yaml,
+    magick,
+    EBImage,
+    ggplot2,
+    scales,
+    DiagrammeR,
+    torch,
+    torchvision,
+    safetensors,
+    Matrix,
+    callr,
+    commonmark
+Suggests:
+    testthat (>= 3.0.0),
+    shinytest2,
+    mirai,
+    patchwork,
+    svglite
+Config/testthat/edition: 3

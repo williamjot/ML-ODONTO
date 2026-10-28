@@ -1,0 +1,16 @@
+# Pipeline de pesquisa em Python (pré-processamento, treino, avaliação, figuras do artigo)
+# Instalação: pip install -r scripts/requirements.txt
+# Para GPU, instale antes o torch/torchvision adequado à sua placa: https://pytorch.org
+numpy>=1.26
+scipy>=1.11
+opencv-python>=4.8
+scikit-image>=0.22
+scikit-learn>=1.5
+joblib>=1.3
+torch>=2.2
+torchvision>=0.17
+safetensors>=0.4
+PyMuPDF>=1.23
+matplotlib>=3.8
+fsspec>=2024.2
+aiohttp>=3.9

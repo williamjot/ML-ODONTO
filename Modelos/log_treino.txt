@@ -1,0 +1,34 @@
+Hanói: 800 imagens, 959989 pixels (16.7% lesão) em 1001s
+B1: Hanói
+    RF treinado com 959989 pixels em 127s
+  mineração 25/300 (5.8s/imagem)
+  mineração 50/300 (5.8s/imagem)
+  mineração 75/300 (5.9s/imagem)
+  mineração 100/300 (6.7s/imagem)
+  mineração 125/300 (7.5s/imagem)
+  mineração 150/300 (7.4s/imagem)
+  mineração 175/300 (7.6s/imagem)
+  mineração 200/300 (8.0s/imagem)
+  mineração 225/300 (7.9s/imagem)
+  mineração 250/300 (7.6s/imagem)
+  mineração 275/300 (7.4s/imagem)
+  mineração 300/300 (7.2s/imagem)
+Mineração: 180000 negativos difíceis de 300 imagens
+B: Hanói + negativos difíceis
+    RF treinado com 1259989 pixels em 117s
+Parte 1/5
+    RF treinado com 1411903 pixels em 139s
+Parte 2/5
+    RF treinado com 1412038 pixels em 140s
+Parte 3/5
+    RF treinado com 1410799 pixels em 148s
+Parte 4/5
+    RF treinado com 1412147 pixels em 147s
+Parte 5/5
+    RF treinado com 1411906 pixels em 152s
+B1: 4% c/ 0.5 FP/img | 4% c/ 1 FP/img | 7% c/ 2 FP/img | 9% c/ 4 FP/img || melhor F1 0.08 (limiar 0.4: sens 16%, prec 5%, 6.2 FP/img, Dice 0.04)
+B: 4% c/ 0.5 FP/img | 4% c/ 1 FP/img | 7% c/ 2 FP/img | 11% c/ 4 FP/img || melhor F1 0.08 (limiar 0.325: sens 16%, prec 6%, 5.8 FP/img, Dice 0.04)
+C: 4% c/ 0.5 FP/img | 11% c/ 1 FP/img | 11% c/ 2 FP/img | 11% c/ 4 FP/img || melhor F1 0.15 (limiar 0.65: sens 11%, prec 25%, 0.6 FP/img, Dice 0.14)
+Melhor variante: C
+    RF treinado com 1449701 pixels em 161s
+Salvo em Modelos/rf_lesoes.joblib e rf_lesoes.json
