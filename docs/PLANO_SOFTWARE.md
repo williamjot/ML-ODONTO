@@ -21,7 +21,7 @@ Data do plano: 27/10/2026 · Autor: William Jota (LEMAG/UnB)
 | R6 | Aplicar o modelo em novas radiografias | Inferência em R com `torch` (CPU), pesos convertidos da U-Net v2 |
 | R7 | Treinamento | Ajuste fino local (decodificador, CPU) com as revisões; exportação de pacote + notebook para retreino completo no Colab |
 | R8 | Rastreabilidade | Cada revisão, modelo e resultado com data, revisor e versão; trilha de auditoria |
-| R9 | Profissional | Tema próprio (bslib, paleta azul do artigo), relatórios PDF/HTML, ícone, tela de abertura, versão |
+| R9 | Profissional | Tema próprio (bslib, paleta azul do projeto), relatórios PDF/HTML, ícone, tela de abertura, versão |
 
 **Fora do escopo:** treinar a U-Net inteira do zero no computador local. Sem GPU, isso levaria dias; o
 software prepara os dados e o notebook, e o treino pesado continua no Colab, como hoje.
@@ -52,7 +52,7 @@ software prepara os dados e o notebook, e o treino pesado continua no Colab, com
 | Estrutura | pacote R com módulos (convenção `golem`, sem dependência dele em produção) | testável, versionado, instalável |
 | Visor de imagem | componente JavaScript próprio (canvas), reaproveitando a lógica de `scripts/revisao/index.html` | zoom/arrastar/desenhar com fluidez; Shiny puro não dá conta |
 | Tabelas | `DT` | filtros e ordenação |
-| Gráficos | `ggplot2` + `patchwork` com `style_nature.R` do projeto; `plotly` só onde interação ajuda | mesma identidade das figuras do artigo |
+| Gráficos | `ggplot2` + `patchwork` com `style_nature.R` do projeto; `plotly` só onde interação ajuda | mesma identidade das figuras do projeto |
 | Diagramas | `DiagrammeR` (Graphviz) com contagens vindas do banco | diagrama do fluxo sempre atualizado |
 | Imagens | `magick` (leitura/gravação) + `EBImage` (CLAHE, rótulos, morfologia, suavização) | cobre todas as operações do OpenCV usadas |
 | Modelos | `torch` + `torchvision` do R, pesos em `.safetensors` | inferência e ajuste fino sem Python |
@@ -82,8 +82,8 @@ software prepara os dados e o notebook, e o treino pesado continua no Colab, com
    métricas), com "ativar" e "voltar ao anterior".
 6. **Resultados.** Gráficos reativos: FROC, métricas com IC, mapa de lesões encontradas, distribuição
    das detecções, concordância entre revisores (kappa) quando houver dois. Exportar PNG/PDF/SVG.
-7. **Relatórios.** Gera relatório de revisão (HTML/PDF) com tabelas e gráficos do momento, para anexar
-   ao artigo ou enviar ao orientador.
+7. **Relatórios.** Gera relatório de revisão (HTML/PDF) com tabelas e gráficos do momento, para arquivar
+   ou enviar ao orientador.
 8. **Ajuda.** Manual do dentista, manual técnico, perguntas frequentes, atalhos, "sobre/versão/licenças".
 9. **Configurações.** Pastas de dados, nome do revisor, limiar de operação, tamanho da amostra
    aleatória, idioma das datas, backup/restauração do banco.
@@ -175,6 +175,6 @@ Ficam em `.claude/skills/` do projeto e orientam cada parte do trabalho:
 | `odonto-shiny-app` | Arquitetura, convenções do pacote, tema, módulos, banco, privacidade |
 | `odonto-visor-revisao` | Componente JS do visor e o fluxo de revisão/auditoria |
 | `odonto-torch-r` | Portar modelos PyTorch para R torch, safetensors, teste de equivalência |
-| `odonto-graficos-reativos` | Gráficos e diagramas atualizáveis no estilo do artigo |
+| `odonto-graficos-reativos` | Gráficos e diagramas atualizáveis no estilo das figuras do projeto |
 | `odonto-manuais-relatorios` | Manuais e relatórios em Quarto/R Markdown |
 | `odonto-standalone-windows` | Empacotamento com R portátil, lançador e instalador |

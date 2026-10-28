@@ -1,4 +1,4 @@
-# Pipeline de pesquisa em Python (pré-processamento, treino, avaliação, figuras do artigo)
+# Pipeline de pesquisa em Python (pré-processamento, treino, avaliação, figuras)
 # Instalação: pip install -r scripts/requirements.txt
 # Para GPU, instale antes o torch/torchvision adequado à sua placa: https://pytorch.org
 numpy>=1.26

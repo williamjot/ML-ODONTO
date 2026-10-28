@@ -55,5 +55,5 @@ Base existente para portar: `scripts/revisao/index.html` (lógica de canvas, ata
 
 Precisão = confirmadas / (confirmadas + rejeitadas), também no cenário pessimista (dúvida = rejeitada);
 sensibilidade estimada = confirmadas / (confirmadas + adicionadas); FP por imagem; tudo com IC 95% de
-Wilson e **separado para a amostra aleatória** (é a que vai para o artigo). Conferir os números contra
+Wilson e **separado para a amostra aleatória** (é a que deve ser relatada). Conferir os números contra
 `scripts/consolidar_revisao.py` nos testes.

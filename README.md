@@ -28,8 +28,6 @@ Redes neurais treinadas em dados públicos · revisão por especialistas · soft
 - [Pipeline de pesquisa (Python)](#pipeline-de-pesquisa-python)
 - [Testes e reprodutibilidade](#testes-e-reprodutibilidade)
 - [Dados, privacidade e ética](#dados-privacidade-e-ética)
-- [Artigo](#artigo)
-- [Como citar](#como-citar)
 - [Licença](#licença)
 
 ---
@@ -123,11 +121,10 @@ ML-ODONTO/
 │   ├── treinar.py, treino_unet.py, treino_duas_etapas.py, treino_dentes.py
 │   ├── avaliar_unet.py, avaliar_duas_etapas.py, avaliar_dentes.py, comparar.py
 │   ├── aplicar.py                aplicação em lote (versão Python)
-│   ├── exportar_figuras.py, figuras_artigo.py
+│   ├── exportar_figuras.py, figuras_radiografias.py
 │   └── gerar_notebook*.py        geram os notebooks do Colab a partir dos scripts
 ├── colab/                        notebooks de treino no Google Colab (GPU)
-├── figuras_R/                    figuras do artigo em R (estilo Nature)
-├── Artigo/                       artigo em LaTeX (LuaLaTeX) e pacote para o Overleaf
+├── figuras_R/                    figuras quantitativas em R (estilo Nature)
 ├── docs/                         manual do dentista, plano do software, equivalência, imagens
 ├── Modelos/                      métricas e registros de treino (pesos fora do repositório)
 ├── Resultados/                   comparação e gráficos agregados (dados de pacientes fora)
@@ -183,7 +180,7 @@ pip install -r scripts/requirements.txt
 | Duas etapas | `treino_duas_etapas.py` (via `colab/Treino_Duas_Etapas.ipynb`) | localizador de ápices + recortes |
 | Classificador por dente | `treino_dentes.py` (via `colab/Treino_Classificador_Dentes.ipynb`) | Hanói + diagnósticos do DENTEX |
 | Avaliação local | `avaliar_unet.py`, `avaliar_duas_etapas.py`, `avaliar_dentes.py`, `comparar.py` | nas 20 panorâmicas marcadas |
-| Figuras | `exportar_figuras.py` → `figuras_R/*.R`; `figuras_artigo.py` | gráficos em R, figuras com radiografias em Python |
+| Figuras | `exportar_figuras.py` → `figuras_R/*.R`; `figuras_radiografias.py` | gráficos em R, figuras com radiografias em Python |
 
 Os notebooks do Colab são **gerados** pelos `gerar_notebook*.py`, que embutem o código de `scripts/`,
 garantindo que o treino na nuvem use exatamente o mesmo código. Conjuntos externos: veja
@@ -209,18 +206,6 @@ Rscript software/odontolesao/tests/equivalencia.R
   [doi:10.17632/kx52tk2ddj.3](https://doi.org/10.17632/kx52tk2ddj.3) (CC BY 4.0); **DENTEX** — Hamamci et al.,
   arXiv:2305.19112 (CC BY-NC-SA 4.0).
 - O software apoia a revisão por especialistas e **não substitui o diagnóstico clínico**.
-
-## Artigo
-
-O manuscrito está em [`Artigo/layout_latex`](Artigo/layout_latex) (LuaLaTeX). As figuras quantitativas são
-geradas em R por [`figuras_R/`](figuras_R) e as figuras com radiografias por `scripts/figuras_artigo.py`
-(não versionadas, por conterem imagens de pacientes).
-
-## Como citar
-
-> Jota, W. *Detecção de lesões periapicais em radiografias panorâmicas com poucos exemplos locais: Random
-> Forest, U-Net em alta resolução e segmentação em duas etapas guiada por ápices.* Laboratório de Estudos
-> Eletromagnéticos (LEMAG), Universidade de Brasília, 2026. Manuscrito em preparação.
 
 ## Licença
 

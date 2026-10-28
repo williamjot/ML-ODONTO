@@ -1,6 +1,6 @@
 # Lesões de referência (20 panorâmicas marcadas), achados por modelo e cartões da auditoria.
 
-# colunas achada_* de lesoes_validacao.csv -> rótulo do modelo (como nas figuras do artigo)
+# colunas achada_* de lesoes_validacao.csv -> rótulo do modelo (como nas figuras do projeto)
 MODELOS_VALIDACAO <- c(B = "RF (Hanói)", C = "RF (Hanói + nossas)", UNET = "U-Net (Hanói)",
                        UNET_FT = "U-Net + ajuste fino", UNET_V2 = "U-Net v2", DUAS = "Duas etapas")
 CORES_MODELO <- c("RF (Hanói)" = "#B8C0C8", "RF (Hanói + nossas)" = "#6B7782", "U-Net (Hanói)" = "#7FB2DE",

@@ -1,4 +1,4 @@
-# Gráficos e diagramas (estilo das figuras do artigo, paleta azul).
+# Gráficos e diagramas (estilo Nature, paleta azul do projeto).
 
 AZUL <- "#1F6FB4"; AZUL_ESCURO <- "#0B2E59"; CINZA <- "#6B7782"
 

@@ -36,22 +36,6 @@ Externos/*
 Modelos/dentes/
 Modelos/duas_etapas/apices_hanoi.json
 
-# ---- Artigo: figuras e PDF com radiografias de pacientes -------------
-Artigo/figuras/*.png
-Artigo/layout_latex/overleaf/figuras/*.png
-Artigo/layout_latex/*.pdf
-Artigo/layout_latex/overleaf/*.pdf
-Artigo/layout_latex/overleaf/overleaf.zip
-# arquivos auxiliares do LaTeX
-*.aux
-*.log
-*.out
-*.toc
-*.synctex*
-*.fdb_latexmk
-*.fls
-Artigo/layout_latex/build.log
-
 # ---- Software: dados locais de teste e registros ---------------------
 software/teste_dados/
 software/logs/

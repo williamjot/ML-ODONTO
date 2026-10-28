@@ -1,10 +1,10 @@
-"""Figuras com imagens para o artigo (rótulos, comparação qualitativa, validação, aplicação).
+"""Figuras com radiografias (rótulos, comparação qualitativa, validação, aplicação).
 
 As figuras quantitativas vêm do R (figuras_R/). Aqui ficam as que mostram radiografias.
 Pacientes da validação aparecem pelo número do PDF (01-20) e imagens da aplicação por
 identificador anônimo (A001-A422, ordem alfabética do arquivo); nenhum nome é desenhado.
 
-Uso: python figuras_artigo.py      Saída: Artigo/figuras/*.png (600 dpi)
+Uso: python figuras_radiografias.py      Saída: Resultados/figuras/radiografias/*.png (600 dpi)
 """
 import csv
 import json
@@ -20,7 +20,7 @@ import matplotlib.pyplot as plt  # noqa: E402
 import comum as c  # noqa: E402
 import deteccao as dt  # noqa: E402
 
-SAIDA = c.RAIZ / "Artigo" / "figuras"
+SAIDA = c.RESULTADOS / "figuras" / "radiografias"
 plt.rcParams.update({"font.family": "Arial", "font.size": 7, "axes.linewidth": 0.45})
 VERDE, AZUL, CIANO = (0.24, 0.78, 0.31), (0.12, 0.44, 0.71), (0.0, 0.85, 1.0)
 # probabilidade em azul: transparente onde p = 0, azul opaco onde p = 1

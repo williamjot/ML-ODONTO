@@ -1,6 +1,6 @@
 ---
 name: odonto-graficos-reativos
-description: Gráficos, tabelas e diagramas que se atualizam com os dados dentro do OdontoLesão (Shiny), no mesmo estilo Nature e paleta azul das figuras do artigo. Use ao criar ou alterar mod_inicio.R, mod_resultados.R, fct_graficos.R, fct_metricas.R ou o diagrama do fluxo.
+description: Gráficos, tabelas e diagramas que se atualizam com os dados dentro do OdontoLesão (Shiny), no mesmo estilo Nature e paleta azul das figuras do projeto. Use ao criar ou alterar mod_inicio.R, mod_resultados.R, fct_graficos.R, fct_metricas.R ou o diagrama do fluxo.
 ---
 
 # Gráficos e diagramas reativos
