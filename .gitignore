@@ -53,6 +53,11 @@ __pycache__/
 renv/library/
 *.zip
 
+# ---- C++ -------------------------------------------------------------
+cpp/build/
+cpp/out/
+.cache/
+
 # ---- Configurações locais do Claude Code (mantém as skills do projeto)
 .claude/*
 !.claude/skills/

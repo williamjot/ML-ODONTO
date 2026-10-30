@@ -1,0 +1,27 @@
+name: C++ core
+
+on:
+  push:
+    paths:
+      - "cpp/**"
+      - ".github/workflows/cpp.yml"
+  pull_request:
+    paths:
+      - "cpp/**"
+      - ".github/workflows/cpp.yml"
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: cmake -S cpp -B cpp/build/ci -DML_ODONTO_BUILD_TESTS=ON -DML_ODONTO_ENABLE_WARNINGS_AS_ERRORS=ON
+      - name: Build
+        run: cmake --build cpp/build/ci --config Release
+      - name: Test
+        run: ctest --test-dir cpp/build/ci -C Release --output-on-failure

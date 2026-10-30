@@ -22,6 +22,7 @@ Redes neurais treinadas em dados públicos · revisão por especialistas · soft
 - [Sobre o projeto](#sobre-o-projeto)
 - [Principais resultados](#principais-resultados)
 - [O software ML ODONTO](#o-software-ml-odonto)
+- [Migração incremental para C++](#migração-incremental-para-c)
 - [Estrutura do repositório](#estrutura-do-repositório)
 - [Instalação](#instalação)
 - [Uso](#uso)
@@ -94,6 +95,15 @@ arrastáveis, barra de ferramentas e barra de status. Roda em `127.0.0.1`, sem n
 A rede roda **em R** (pacote `torch`), sem Python: o pré-processamento (redução por área e CLAHE) e a
 detecção foram reescritos e reproduzem o pipeline Python **lesão a lesão** nas 20 panorâmicas marcadas
 (31/45, correlação das probabilidades ≥ 0,998). Detalhes em [`docs/EQUIVALENCIA_R_PYTHON.md`](docs/EQUIVALENCIA_R_PYTHON.md).
+
+## Migração incremental para C++
+
+O diretório [`cpp/`](cpp/) contém o novo núcleo C++20, desenvolvido em paralelo ao aplicativo R. A
+primeira etapa porta o pré-processamento e a detecção, fornece uma CLI para testes de equivalência e
+prepara a inferência com ONNX Runtime. O aplicativo R permanece como implementação de referência até o
+C++ reproduzir os resultados validados nas 20 panorâmicas.
+
+Consulte [`cpp/README.md`](cpp/README.md) para compilação, testes e critérios de aceite.
 
 ## Estrutura do repositório
 
