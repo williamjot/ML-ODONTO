@@ -79,6 +79,30 @@ install(TARGETS ml_odonto_core ml-odonto-cli
 )
 install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
+# Programa de janela própria (Windows): abre o aplicativo numa janela WebView2, sem navegador.
+# Precisa da biblioteca webview (WEBVIEW_INCLUDE, com webview/webview.h) e do SDK do WebView2
+# (WEBVIEW2_INCLUDE, com WebView2.h); o tools/build.py baixa os dois para cpp/.deps.
+option(ML_ODONTO_BUILD_APP "Build the ML ODONTO desktop window (Windows)" OFF)
+if(ML_ODONTO_BUILD_APP)
+    if(NOT WIN32)
+        message(FATAL_ERROR "ML_ODONTO_BUILD_APP is Windows-only")
+    endif()
+    if(NOT WEBVIEW_INCLUDE OR NOT WEBVIEW2_INCLUDE)
+        message(FATAL_ERROR "Set WEBVIEW_INCLUDE and WEBVIEW2_INCLUDE")
+    endif()
+    enable_language(RC)
+    add_executable(ml-odonto-app WIN32 app/ml_odonto_app.cpp app/ml_odonto.rc)
+    set_target_properties(ml-odonto-app PROPERTIES OUTPUT_NAME "ML ODONTO")
+    target_compile_features(ml-odonto-app PRIVATE cxx_std_20)
+    target_include_directories(ml-odonto-app SYSTEM PRIVATE "${WEBVIEW_INCLUDE}" "${WEBVIEW2_INCLUDE}")
+    if(NOT MSVC)
+        target_include_directories(ml-odonto-app SYSTEM PRIVATE app/compat)  # EventToken.h
+    endif()
+    target_compile_definitions(ml-odonto-app PRIVATE UNICODE _UNICODE WEBVIEW_STATIC)
+    target_link_libraries(ml-odonto-app PRIVATE ws2_32 advapi32 ole32 shell32 shlwapi user32 version)
+    install(TARGETS ml-odonto-app RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+endif()
+
 if(ML_ODONTO_BUILD_TESTS)
     enable_testing()
     add_executable(ml_odonto_core_tests tests/core_tests.cpp)

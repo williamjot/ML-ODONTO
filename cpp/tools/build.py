@@ -50,25 +50,43 @@ def zig_wrappers() -> dict[str, Path]:
     return tools
 
 
+def fetch(url: str, archive: Path, destination: Path) -> None:
+    """Baixa (uma vez) e extrai um .zip/.nupkg/.tgz/.tar.gz em `destination`."""
+    if not archive.is_file():
+        print("baixando", url, flush=True)
+        DEPS.mkdir(parents=True, exist_ok=True)
+        urllib.request.urlretrieve(url, archive)
+    if archive.suffix in (".zip", ".nupkg"):
+        with zipfile.ZipFile(archive) as source:
+            source.extractall(destination)
+    else:
+        with tarfile.open(archive) as source:
+            source.extractall(destination, filter="data")
+
+
 def onnxruntime(version: str) -> Path:
     system = {"Windows": "win", "Linux": "linux", "Darwin": "osx"}[platform.system()]
     name = f"onnxruntime-{system}-x64-{version}"
     root = DEPS / name
-    if (root / "include" / "onnxruntime_cxx_api.h").is_file():
-        return root
-    archive = DEPS / (name + (".zip" if system == "win" else ".tgz"))
-    if not archive.is_file():
-        url = f"https://github.com/microsoft/onnxruntime/releases/download/v{version}/{archive.name}"
-        print("baixando", url, flush=True)
-        DEPS.mkdir(parents=True, exist_ok=True)
-        urllib.request.urlretrieve(url, archive)
-    if archive.suffix == ".zip":
-        with zipfile.ZipFile(archive) as source:
-            source.extractall(DEPS)
-    else:
-        with tarfile.open(archive) as source:
-            source.extractall(DEPS, filter="data")
+    if not (root / "include" / "onnxruntime_cxx_api.h").is_file():
+        archive = DEPS / (name + (".zip" if system == "win" else ".tgz"))
+        fetch(f"https://github.com/microsoft/onnxruntime/releases/download/v{version}/{archive.name}",
+              archive, DEPS)
     return root
+
+
+def webview(version: str, sdk_version: str) -> tuple[Path, Path]:
+    """Biblioteca webview (MIT) e cabeçalhos do SDK do WebView2 (Microsoft, NuGet)."""
+    include = DEPS / f"webview-{version}" / "core" / "include"
+    if not (include / "webview" / "webview.h").is_file():
+        fetch(f"https://github.com/webview/webview/archive/refs/tags/{version}.tar.gz",
+              DEPS / f"webview-{version}.tar.gz", DEPS)
+    sdk = DEPS / f"webview2-sdk-{sdk_version}"
+    if not (sdk / "build" / "native" / "include" / "WebView2.h").is_file():
+        fetch("https://api.nuget.org/v3-flatcontainer/microsoft.web.webview2/"
+              f"{sdk_version}/microsoft.web.webview2.{sdk_version}.nupkg",
+              DEPS / f"webview2-sdk-{sdk_version}.nupkg", sdk)
+    return include, sdk / "build" / "native" / "include"
 
 
 def main() -> None:
@@ -76,6 +94,8 @@ def main() -> None:
     parser.add_argument("--onnxruntime", default="1.31.1", help="versão do ONNX Runtime")
     parser.add_argument("--system-compiler", action="store_true",
                         help="usa o compilador do sistema (MSVC, GCC) em vez do Zig")
+    parser.add_argument("--webview", default="0.12.0", help="versão da biblioteca webview")
+    parser.add_argument("--webview2-sdk", default="1.0.4258.31", help="versão do SDK do WebView2")
     parser.add_argument("--no-install", action="store_true", help="não copia para o aplicativo R")
     args = parser.parse_args()
 
@@ -88,6 +108,10 @@ def main() -> None:
                       f"-DCMAKE_AR={tools['ar'].as_posix()}", f"-DCMAKE_RANLIB={tools['ranlib'].as_posix()}"]
         if WINDOWS:
             configure.append(f"-DCMAKE_RC_COMPILER={tools['rc'].as_posix()}")
+    if WINDOWS:
+        webview_include, webview2_include = webview(args.webview, args.webview2_sdk)
+        configure += ["-DML_ODONTO_BUILD_APP=ON", f"-DWEBVIEW_INCLUDE={webview_include.as_posix()}",
+                      f"-DWEBVIEW2_INCLUDE={webview2_include.as_posix()}"]
     if shutil.which("ninja") is None:
         raise SystemExit("instale o Ninja: python -m pip install ninja")
     run(*configure)
@@ -95,6 +119,10 @@ def main() -> None:
     run("ctest", "--test-dir", build, "--output-on-failure")
     if not args.no_install:
         run(sys.executable, CPP / "tools" / "install_into_app.py", "--build", build)
+        app = build / "ML ODONTO.exe"
+        if app.is_file():
+            shutil.copy2(app, CPP.parent / app.name)
+            print("programa:", CPP.parent / app.name)
         print("\nPronto. Reinstale o pacote R: R CMD INSTALL --no-test-load software/odontolesao")
 
 

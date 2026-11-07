@@ -120,7 +120,7 @@ Detalhes, validação e critérios em [`cpp/README.md`](cpp/README.md) e
 ML-ODONTO/
 ├── README.md                     este arquivo
 ├── LICENSE                       uso acadêmico e não comercial
-├── Abrir_ML_ODONTO.bat           abre o programa (Windows)
+├── ML ODONTO.exe                 o programa (gerado por cpp/tools/build.py, fora do git)
 ├── Revisar_lesoes.bat           ferramenta de revisão antiga (Python), substituída pelo ML ODONTO
 │
 ├── software/                     ── programa ML ODONTO (R)
@@ -177,7 +177,14 @@ recomendados para aplicar o modelo), ~2 GB livres em disco.
    ```bash
    Rscript software/instalar_dependencias.R
    ```
-4. Abra com dois cliques em **`Abrir_ML_ODONTO.bat`** (ou `Rscript -e "odontolesao::run_app()"`).
+4. Gere o programa (uma vez; também instala o motor C++):
+   ```bash
+   python -m pip install cmake ninja ziglang onnx onnxruntime
+   python cpp/tools/build.py
+   ```
+5. Abra com dois cliques em **`ML ODONTO.exe`**, na pasta do projeto. Ele abre na própria janela, sem
+   navegador nem console (usa o WebView2, que já vem no Windows 10/11). Sem o .exe, o programa também
+   abre com `Rscript -e "odontolesao::run_app()"`, no navegador.
 
 Na primeira execução, o programa importa as radiografias e as detecções da pasta do projeto (opção
 `odontolesao.projeto`) e guarda tudo em `Documentos\OdontoLesao` — banco SQLite, cópias reduzidas das

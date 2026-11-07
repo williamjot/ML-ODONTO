@@ -11,11 +11,11 @@ verdade** e **ensiná-lo a encontrar as lesões que hoje escapam**, sobretudo as
 
 ## 1. Abrir o programa
 
-1. Na pasta do projeto, dê dois cliques em **`Abrir_ML_ODONTO.bat`**.
-2. Abre-se uma janela preta (deixe-a aberta enquanto usa o programa) e, em seguida, o navegador com o ML ODONTO.
+1. Na pasta do projeto, dê dois cliques em **`ML ODONTO.exe`** (ícone azul com um dente).
+2. O programa abre na própria janela e mostra "Carregando o programa…" por alguns segundos.
 3. Na primeira vez, informe o **seu nome**. Cada revisor tem as próprias respostas; o nome aparece no canto
    superior direito e pode ser trocado em **Configurações**.
-4. Para sair, feche a aba do navegador e a janela preta. **Tudo já fica salvo** — não há botão "Salvar".
+4. Para sair, feche a janela. **Tudo já fica salvo** — não há botão "Salvar".
 
 ## 2. Conhecendo a tela
 
@@ -129,11 +129,11 @@ automaticamente todos os dias (Configurações → Fazer backup agora, para uma 
 **Duas pessoas podem revisar?** Sim. Cada uma usa o próprio nome; as respostas ficam separadas, e o programa
 calcula a concordância entre os revisores.
 
-**O navegador fechou.** Dê dois cliques de novo em `Abrir_ML_ODONTO.bat`. Se a janela preta ainda estiver
-aberta, feche-a antes.
+**Fechei sem querer.** Dê dois cliques de novo em `ML ODONTO.exe`. Se ele já estiver aberto, a janela
+existente volta para a frente.
 
-**O programa não abre.** Feche todas as janelas pretas do ML ODONTO e tente de novo. Se persistir, anote a
-mensagem da janela preta e envie ao responsável técnico.
+**O programa não abre.** Feche o ML ODONTO e tente de novo. Se persistir, envie ao responsável técnico o
+arquivo de registro indicado na tela (fica em `%LOCALAPPDATA%\ML ODONTO\janela.log`).
 
 **Onde ficam os dados?** Em `Documentos\OdontoLesao` (banco, cópias reduzidas das imagens e backups).
 

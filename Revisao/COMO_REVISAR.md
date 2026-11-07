@@ -1,5 +1,5 @@
 > **Ferramenta antiga (Python), mantida só como referência.** Use o programa **ML ODONTO**
-> (`Abrir_ML_ODONTO.bat`); o manual atualizado está em [`docs/MANUAL_DENTISTA.md`](../docs/MANUAL_DENTISTA.md).
+> (`ML ODONTO.exe`); o manual atualizado está em [`docs/MANUAL_DENTISTA.md`](../docs/MANUAL_DENTISTA.md).
 
 # Como revisar as detecções
 

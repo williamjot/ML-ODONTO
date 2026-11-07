@@ -47,6 +47,24 @@ ctest --preset default
 
 Nada disso vai para o repositório: `cpp/build/`, `cpp/.deps/`, `*.onnx` e `inst/bin/` estão no `.gitignore`.
 
+## Programa de janela própria (`ML ODONTO.exe`)
+
+`app/ml_odonto_app.cpp` é o programa que o usuário abre: uma janela nativa do Windows com WebView2 (o
+componente web que vem no Windows 10/11, via biblioteca [webview](https://github.com/webview/webview)),
+sem navegador e sem console. Ele:
+
+1. procura o R (pasta `R\` ao lado do .exe, registro do Windows ou `C:\Program Files\R`);
+2. sobe `odontolesao::run_app()` escondido numa porta local livre, com o registro em
+   `%LOCALAPPDATA%\ML ODONTO\janela.log`;
+3. mostra "Carregando o programa…" e troca para a interface assim que o servidor responde;
+4. ao fechar a janela, encerra o R (job object do Windows: a árvore morre mesmo se o .exe travar);
+5. numa segunda execução, só traz a janela aberta para a frente.
+
+O `build.py` baixa a webview 0.12.0 e o SDK do WebView2 para `cpp/.deps/`, compila e copia o
+`ML ODONTO.exe` para a raiz do projeto. O ícone sai de `app/ml_odonto.ico` (gerado do logotipo por
+`app/make_icon.py`). Por enquanto o .exe precisa do R e do pacote `odontolesao` instalados no computador;
+o instalador com R embutido é a próxima etapa.
+
 ## Linha de comando
 
 ```bash

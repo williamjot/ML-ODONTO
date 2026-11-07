@@ -67,3 +67,6 @@ cpp/out/
 # ---- Configurações locais do Claude Code (mantém as skills do projeto)
 .claude/*
 !.claude/skills/
+
+# Programa de janela própria, gerado por cpp/tools/build.py
+/ML ODONTO.exe
