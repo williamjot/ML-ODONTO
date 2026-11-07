@@ -57,8 +57,11 @@ mod_aplicar_server <- function(id, ctx) {
     output$encontradas <- renderUI({
       n <- length(fila())
       if (!n) return(NULL)
+      cpp <- motor_inferencia(ctx$modelo()$arquivo) == "cpp"
       htmltools::div(class = "alert alert-info py-1 px-2 small mt-2 mb-0",
-        sprintf("%d radiografia(s) prontas. Tempo estimado: cerca de %s.", n, formatar_duracao(n * 27)))
+        sprintf("%d radiografia(s) prontas. Tempo estimado: cerca de %s.", n, formatar_duracao(n * if (cpp) 17 else 27)),
+        htmltools::br(),
+        if (cpp) "Motor de inferência: C++ (ONNX Runtime)." else "Motor de inferência: R torch (o motor C++ não está instalado).")
     })
 
     observeEvent(input$aplicar, {

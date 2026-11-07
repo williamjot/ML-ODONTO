@@ -96,14 +96,23 @@ A rede roda **em R** (pacote `torch`), sem Python: o pré-processamento (reduç�
 detecção foram reescritos e reproduzem o pipeline Python **lesão a lesão** nas 20 panorâmicas marcadas
 (31/45, correlação das probabilidades ≥ 0,998). Detalhes em [`docs/EQUIVALENCIA_R_PYTHON.md`](docs/EQUIVALENCIA_R_PYTHON.md).
 
-## Migração incremental para C++
+## Motor de inferência em C++
 
-O diretório [`cpp/`](cpp/) contém o novo núcleo C++20, desenvolvido em paralelo ao aplicativo R. A
-primeira etapa porta o pré-processamento e a detecção, fornece uma CLI para testes de equivalência e
-prepara a inferência com ONNX Runtime. O aplicativo R permanece como implementação de referência até o
-C++ reproduzir os resultados validados nas 20 panorâmicas.
+O diretório [`cpp/`](cpp/) contém um motor C++20 com ONNX Runtime que faz o caminho completo — radiografia
+→ normalização → U-Net (com espelhamento) → probabilidade → lesões. Ele reproduz a referência **lesão a
+lesão** nas 20 panorâmicas marcadas (31/45, 0 falso positivo, correlação ≥ 0,998, Dice ≥ 0,988) e leva
+~13 s por radiografia num PC de 8 GB; no mesmo lote de teste, 32 s contra 85 s do R torch.
 
-Consulte [`cpp/README.md`](cpp/README.md) para compilação, testes e critérios de aceite.
+Quando está instalado, a tela **Aplicar** usa o motor C++ automaticamente (a detecção continua em R, a
+mesma já validada); sem ele, tudo funciona como antes em R torch. Para compilar e instalar, num comando:
+
+```bash
+python -m pip install cmake ninja ziglang onnx onnxruntime
+python cpp/tools/build.py
+```
+
+Detalhes, validação e critérios em [`cpp/README.md`](cpp/README.md) e
+[`docs/EQUIVALENCIA_CPP.md`](docs/EQUIVALENCIA_CPP.md).
 
 ## Estrutura do repositório
 
@@ -123,6 +132,12 @@ ML-ODONTO/
 │       ├── inst/modelos/         registro dos modelos (pesos à parte, ver LEIAME.md)
 │       ├── inst/sql/             migrações do banco SQLite
 │       └── tests/                testes unitários e teste de equivalência R × Python
+│
+├── cpp/                          ── motor de inferência C++ (ONNX Runtime)
+│   ├── include/, src/            núcleo: pré-processamento, detecção, pipeline, CLI
+│   ├── tests/                    testes unitários
+│   ├── third_party/stb/          leitura e gravação de PNG/JPEG (domínio público)
+│   └── tools/                    build, exportação ONNX, instalação no app e validação
 │
 ├── scripts/                      ── pipeline de pesquisa (Python)
 │   ├── requirements.txt
@@ -199,12 +214,18 @@ garantindo que o treino na nuvem use exatamente o mesmo código. Conjuntos exter
 ## Testes e reprodutibilidade
 
 ```bash
-# testes unitários do pacote (29 testes)
+# testes unitários do pacote (35 testes)
 Rscript -e "testthat::test_local('software/odontolesao')"
 
 # equivalência R × Python nas 20 panorâmicas marcadas (~10 min; exige os dados locais)
 Rscript software/odontolesao/tests/equivalencia.R
+
+# equivalência do motor C++ nas mesmas 20 panorâmicas (~5 min; exige os dados locais)
+python cpp/tools/validate_pipeline.py --cli cpp/build/zig-onnx/ml-odonto-cli.exe
 ```
+
+Os testes unitários do C++ rodam a cada `python cpp/tools/build.py` e na integração contínua do GitHub
+(Linux e Windows).
 
 ## Dados, privacidade e ética
 

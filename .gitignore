@@ -36,6 +36,12 @@ Externos/*
 Modelos/dentes/
 Modelos/duas_etapas/apices_hanoi.json
 
+# ---- Motor C++: builds, dependências baixadas e binários instalados no app
+*.onnx
+cpp/build/
+cpp/.deps/
+software/odontolesao/inst/bin/
+
 # ---- Software: dados locais de teste e registros ---------------------
 software/teste_dados/
 software/logs/

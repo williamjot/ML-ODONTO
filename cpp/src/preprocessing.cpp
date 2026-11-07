@@ -10,8 +10,11 @@
 namespace ml_odonto {
 namespace {
 
+// Arredonda metade para o par, como round() do R e cvRound do OpenCV (std::lround iria para longe do zero).
+double round_half_even(double value) { return std::nearbyint(value); }
+
 unsigned char to_byte(double value) {
-    return static_cast<unsigned char>(std::clamp(std::lround(value), 0L, 255L));
+    return static_cast<unsigned char>(std::clamp(round_half_even(value), 0.0, 255.0));
 }
 
 struct Weight {
@@ -43,9 +46,9 @@ WeightTable area_weights(std::size_t input_size, std::size_t output_size) {
     return result;
 }
 
-}  // namespace
-
-GrayImage resize_area(const GrayImage& input, std::size_t output_height, std::size_t output_width) {
+template <typename T, typename Store>
+Image<T> resize_area_impl(const Image<T>& input, std::size_t output_height, std::size_t output_width,
+                          Store store) {
     if (input.empty()) {
         throw std::invalid_argument("cannot resize an empty image");
     }
@@ -63,30 +66,45 @@ GrayImage resize_area(const GrayImage& input, std::size_t output_height, std::si
         }
     }
 
-    GrayImage result(output_height, output_width, 0);
+    Image<T> result(output_height, output_width, T{});
     for (std::size_t y = 0; y < output_height; ++y) {
         for (std::size_t x = 0; x < output_width; ++x) {
             double value = 0.0;
             for (const auto& weight : horizontal[x]) {
                 value += weight.value * intermediate(y, weight.index);
             }
-            result(y, x) = to_byte(value);
+            result(y, x) = store(value);
         }
     }
     return result;
 }
 
-GrayImage resize_to_width(const GrayImage& input, std::size_t target_width) {
-    if (input.empty() || target_width == 0) {
+}  // namespace
+
+GrayImage resize_area(const GrayImage& input, std::size_t output_height, std::size_t output_width) {
+    return resize_area_impl(input, output_height, output_width, to_byte);
+}
+
+FloatImage resize_area(const FloatImage& input, std::size_t output_height, std::size_t output_width) {
+    return resize_area_impl(input, output_height, output_width,
+                            [](double value) { return static_cast<float>(value); });
+}
+
+std::size_t height_for_width(std::size_t height, std::size_t width, std::size_t target_width) {
+    if (height == 0 || width == 0 || target_width == 0) {
         throw std::invalid_argument("image and target width must be non-empty");
     }
-    const auto target_height = static_cast<std::size_t>(std::lround(
-        static_cast<double>(input.height()) * static_cast<double>(target_width) /
-        static_cast<double>(input.width())));
+    return std::max<std::size_t>(1, static_cast<std::size_t>(round_half_even(
+                                        static_cast<double>(height) * static_cast<double>(target_width) /
+                                        static_cast<double>(width))));
+}
+
+GrayImage resize_to_width(const GrayImage& input, std::size_t target_width) {
+    const auto target_height = height_for_width(input.height(), input.width(), target_width);
     if (target_width > input.width()) {
         throw std::invalid_argument("the equivalence core currently supports area reduction only");
     }
-    return resize_area(input, std::max<std::size_t>(1, target_height), target_width);
+    return resize_area(input, target_height, target_width);
 }
 
 GrayImage clahe(const GrayImage& input, double clip_limit, std::size_t grid) {

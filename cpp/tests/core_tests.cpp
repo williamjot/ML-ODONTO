@@ -1,6 +1,7 @@
 #include "ml_odonto/detection.hpp"
 #include "ml_odonto/image.hpp"
 #include "ml_odonto/io.hpp"
+#include "ml_odonto/pipeline.hpp"
 #include "ml_odonto/preprocessing.hpp"
 
 #include <algorithm>
@@ -125,6 +126,75 @@ void test_pfm_roundtrip() {
     }
 }
 
+void test_float_resize_and_rounding() {
+    ml_odonto::FloatImage input(20, 30, 0.0F);
+    for (std::size_t y = 0; y < input.height(); ++y) {
+        for (std::size_t x = 0; x < input.width(); ++x) {
+            input(y, x) = static_cast<float>(y * x) / 600.0F;
+        }
+    }
+    const auto output = ml_odonto::resize_area(input, 14, 21);
+    const auto mean = [](const ml_odonto::FloatImage& image) {
+        return std::accumulate(image.pixels().begin(), image.pixels().end(), 0.0) /
+               static_cast<double>(image.size());
+    };
+    check(output.height() == 14 && output.width() == 21, "float area resize dimensions");
+    check(std::abs(mean(input) - mean(output)) < 1.0e-5, "float area resize preserves the mean");
+    check(output(0, 0) < 0.002F, "float area resize keeps fractional values");
+
+    // round() do R e cvRound arredondam metade para o par
+    check(ml_odonto::height_for_width(3, 2, 1) == 2, "height 1.5 rounds to 2");
+    check(ml_odonto::height_for_width(5, 2, 1) == 2, "height 2.5 rounds to 2");
+    check(ml_odonto::height_for_width(1297, 2573, 1400) == 706, "reference radiograph height");
+}
+
+void test_png_roundtrip() {
+    ml_odonto::GrayImage input(5, 7, 0);
+    for (std::size_t index = 0; index < input.size(); ++index) {
+        input.pixels()[index] = static_cast<unsigned char>(index * 7);
+    }
+    const auto path = std::filesystem::temp_directory_path() / "ml_odonto_core_test.png";
+    ml_odonto::write_png(path, input);
+    const auto output = ml_odonto::read_image(path);
+    std::filesystem::remove(path);
+    check(output.height() == 5 && output.width() == 7 && output.pixels() == input.pixels(),
+          "PNG roundtrip is lossless");
+}
+
+// Motor falso: uma mancha de probabilidade alta no centro, como a U-Net devolveria.
+class BlobEngine final : public ml_odonto::InferenceEngine {
+public:
+    ml_odonto::FloatImage predict(const ml_odonto::GrayImage& normalized) override {
+        last_width = normalized.width();
+        ml_odonto::FloatImage result(normalized.height(), normalized.width(), 0.0F);
+        for (std::size_t y = normalized.height() / 2 - 15; y < normalized.height() / 2 + 15; ++y) {
+            for (std::size_t x = normalized.width() / 2 - 15; x < normalized.width() / 2 + 15; ++x) {
+                result(y, x) = 0.95F;
+            }
+        }
+        return result;
+    }
+    std::size_t last_width{0};
+};
+
+void test_pipeline_scales() {
+    ml_odonto::GrayImage original(120, 260, 0);
+    for (std::size_t index = 0; index < original.size(); ++index) {
+        original.pixels()[index] = static_cast<unsigned char>(40 + index % 150);
+    }
+    BlobEngine engine;
+    ml_odonto::PipelineOptions options;
+    options.model_width = 200;
+    options.working_width = 140;
+    options.detection.region_radius = 30;
+    const auto result = ml_odonto::run_pipeline(original, engine, options);
+    check(engine.last_width == 200, "pipeline predicts at the model width");
+    check(result.probability.width() == 140 && result.probability.height() == 65,
+          "pipeline reduces the probability to the working width");
+    check(result.mask.width() == 140 && result.components.size() == 1,
+          "pipeline finds the single lesion");
+}
+
 }  // namespace
 
 int main() {
@@ -135,6 +205,9 @@ int main() {
     test_detection_matches_r_synthetic_case();
     test_clahe_range();
     test_pfm_roundtrip();
+    test_float_resize_and_rounding();
+    test_png_roundtrip();
+    test_pipeline_scales();
     if (failures != 0) {
         std::cerr << failures << " test assertion(s) failed\n";
         return EXIT_FAILURE;

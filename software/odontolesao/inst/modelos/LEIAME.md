@@ -11,6 +11,10 @@ Coloque nesta pasta, **antes de instalar o pacote**, os arquivos:
 
 O registro `modelos.yml` descreve cada um (largura, limiar de operação, métricas).
 
+O motor C++ usa `unet_lesoes_v2.onnx`, gerado a partir do `.safetensors` por `python cpp/tools/build.py`
+(ou só `python cpp/tools/export_onnx.py <pesos> <saida.onnx> --verify`). Ele também fica fora do
+repositório; sem ele, a tela Aplicar usa o R torch.
+
 Para gerar os `.safetensors` a partir dos checkpoints do PyTorch (`Modelos/*.pt`), veja a seção
 "Converter pesos" da skill `.claude/skills/odonto-torch-r/SKILL.md`. Uso acadêmico e não comercial
 (o DENTEX é licenciado sob CC BY-NC-SA 4.0).

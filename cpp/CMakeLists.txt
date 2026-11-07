@@ -10,9 +10,13 @@ add_library(ml_odonto_core
     src/detection.cpp
     src/image.cpp
     src/io.cpp
+    src/pipeline.cpp
     src/preprocessing.cpp
+    src/stb_impl.cpp
 )
 add_library(ml_odonto::core ALIAS ml_odonto_core)
+
+include(GNUInstallDirs)
 
 if(ML_ODONTO_WITH_ONNX)
     if(NOT ONNXRUNTIME_ROOT)
@@ -29,6 +33,13 @@ if(ML_ODONTO_WITH_ONNX)
 endif()
 
 target_compile_features(ml_odonto_core PUBLIC cxx_std_20)
+# stb (domínio público) vem junto em third_party; os avisos dele não são nossos
+target_include_directories(ml_odonto_core SYSTEM PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/third_party/stb")
+if(MSVC)
+    set_source_files_properties(src/stb_impl.cpp PROPERTIES COMPILE_OPTIONS "/W0")
+else()
+    set_source_files_properties(src/stb_impl.cpp PROPERTIES COMPILE_OPTIONS "-w")
+endif()
 target_include_directories(ml_odonto_core
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -49,8 +60,17 @@ endif()
 
 add_executable(ml-odonto-cli src/main.cpp)
 target_link_libraries(ml-odonto-cli PRIVATE ml_odonto::core)
+if(WIN32)
+    target_link_libraries(ml-odonto-cli PRIVATE shell32)  # CommandLineToArgvW
+endif()
+if(ML_ODONTO_WITH_ONNX AND WIN32)
+    # o executável precisa das DLLs do ONNX Runtime ao lado dele
+    file(GLOB ONNXRUNTIME_DLLS "${ONNXRUNTIME_ROOT}/lib/*.dll")
+    add_custom_command(TARGET ml-odonto-cli POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ONNXRUNTIME_DLLS} $<TARGET_FILE_DIR:ml-odonto-cli>)
+    install(FILES ${ONNXRUNTIME_DLLS} DESTINATION ${CMAKE_INSTALL_BINDIR})
+endif()
 
-include(GNUInstallDirs)
 install(TARGETS ml_odonto_core ml-odonto-cli
     EXPORT ml_odontoTargets
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}

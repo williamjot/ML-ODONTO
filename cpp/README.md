@@ -1,82 +1,92 @@
 # ML ODONTO C++
 
-Primeiro marco da migração incremental do ML ODONTO para C++20. Esta pasta não substitui o aplicativo
-R: ela contém o núcleo matemático que será validado contra a implementação de referência antes da
-migração da interface.
+Motor de inferência C++20 do ML ODONTO. Faz o caminho completo da radiografia às lesões com a U-Net v2
+exportada para ONNX e reproduz a implementação de referência (Python e R) lesão a lesão. O aplicativo R
+usa este motor na tela **Aplicar** quando ele está instalado; sem ele, continua em R torch.
 
-## Estado atual
+## O que faz
 
-- redução por área equivalente ao pré-processamento de referência;
-- CLAHE 8 × 8, limite 2,0;
-- suavização gaussiana com borda `reflect-101`;
-- filtro de máximos locais com borda refletida;
-- componentes conexos com vizinhança 8;
-- extração de candidatos e construção da máscara no limiar escolhido;
-- leitura/escrita de PGM e PFM para testes de equivalência;
-- CLI e testes unitários sem dependências externas.
+| Etapa | Arquivo | Equivale a |
+|---|---|---|
+| Leitura de PNG, JPEG, BMP, PGM (cinza 8 bits) | `src/io.cpp` (stb) | `ler_radiografia()` |
+| Redução por área e CLAHE 8 × 8, limite 2,0 | `src/preprocessing.cpp` | `cv2.INTER_AREA`, `cv2.createCLAHE` |
+| U-Net ResNet34 + sigmoide + média com o espelhado | `src/onnx_engine.cpp` (grafo de `tools/export_onnx.py`) | `prever_unet()` |
+| Probabilidade 2.000 → 1.400 px por área | `src/pipeline.cpp` | `prever_radiografia()` |
+| Suavização gaussiana (reflect-101), máximos locais, regiões com vizinhança 8 | `src/detection.cpp` | `scripts/deteccao.py`, `detectar_lesoes()` |
+| Máscara no limiar, componentes, JSON | `src/detection.cpp`, `src/io.cpp` | `mascara_lesoes()` |
 
-O adaptador da U-Net com ONNX Runtime já está disponível; a leitura direta de JPEG/PNG/TIFF virá com o
-adaptador OpenCV. Os pesos não são versionados neste repositório; consulte
-`software/odontolesao/inst/modelos/LEIAME.md`. A opção ONNX fica desligada por padrão para manter os
-testes do núcleo independentes de bibliotecas externas.
+Os arredondamentos seguem o R e o OpenCV (metade para o par). TIFF não é lido diretamente: o aplicativo R
+converte para PNG antes de chamar o executável. Caminhos com acentos funcionam no Windows (a linha de
+comando é lida em UTF-16).
 
-## Compilar
+## Compilar e instalar no aplicativo
 
-Requisitos: CMake 3.24+, Ninja e um compilador C++20.
+Num comando, sem Visual Studio (compilador Zig/clang e CMake/Ninja instalados pelo pip):
 
-```powershell
-cd cpp
+```bash
+python -m pip install cmake ninja ziglang onnx onnxruntime torch safetensors
+python cpp/tools/build.py
+R CMD INSTALL --no-test-load software/odontolesao
+```
+
+O `build.py`:
+
+1. baixa uma vez o ONNX Runtime oficial (Microsoft, GitHub) para `cpp/.deps/`;
+2. compila em `cpp/build/zig-onnx/` e roda os testes unitários;
+3. chama `tools/install_into_app.py`, que copia `ml-odonto-cli.exe` e as DLLs para
+   `software/odontolesao/inst/bin/` e exporta `unet_lesoes_v2.onnx` ao lado dos pesos (com
+   `--verify`: erro máximo PyTorch × ONNX de 1,3 × 10⁻⁷).
+
+Com Visual Studio ou GCC, use `python cpp/tools/build.py --system-compiler`. Só o núcleo, sem ONNX:
+
+```bash
 cmake --preset default
 cmake --build --preset default
 ctest --preset default
 ```
 
-## CLI de equivalência
+Nada disso vai para o repositório: `cpp/build/`, `cpp/.deps/`, `*.onnx` e `inst/bin/` estão no `.gitignore`.
 
-O formato PFM preserva as probabilidades `float32` geradas pelo R/Python sem introduzir quantização.
+## Linha de comando
 
-```powershell
-ml-odonto-cli detect probabilidade.pfm mascara.pgm deteccoes.json 0.5
+```bash
+# radiografias -> <nome>_probabilidade.pfm, <nome>_mascara.png, <nome>_deteccoes.json
+ml-odonto-cli run unet_lesoes_v2.onnx saida/ rad1.jpg rad2.png --threshold 0.5
+
+# etapas isoladas, para testes de equivalência
 ml-odonto-cli preprocess radiografia.pgm normalizada.pgm 2000
-```
-
-### Inferência ONNX
-
-Converta os pesos e valide o grafo:
-
-```powershell
-python cpp/tools/export_onnx.py `
-  software/odontolesao/inst/modelos/unet_lesoes_v2.safetensors `
-  software/odontolesao/inst/modelos/unet_lesoes_v2.onnx --verify
-```
-
-Configure o build apontando para o pacote binário do ONNX Runtime:
-
-```powershell
-cmake --preset default -DML_ODONTO_WITH_ONNX=ON -DONNXRUNTIME_ROOT=C:\caminho\onnxruntime
-cmake --build --preset default
 ml-odonto-cli infer unet_lesoes_v2.onnx normalizada.pgm probabilidade.pfm
+ml-odonto-cli detect probabilidade.pfm mascara.pgm deteccoes.json 0.5
 ```
 
-Para comparar o pós-processamento nas 20 probabilidades validadas:
+O `run` carrega o modelo uma vez e processa a lista; imprime uma linha `ok <nome> ...` ou
+`error <nome>: ...` por radiografia, na ordem dada (o aplicativo R acompanha o andamento por elas). Uma
+radiografia com erro não interrompe as demais. A probabilidade e a máscara ficam na escala de trabalho
+(1.400 px de largura); o JSON traz `schema_version`, o tamanho original, o tempo e os candidatos.
+Coordenadas são baseadas em zero.
 
-```powershell
-python cpp/tools/compare_reference.py `
-  --cli cpp/build/default/ml-odonto-cli.exe `
-  --probabilities Resultados/validacao/probs_UNET_V2.npz
+## Integração com o aplicativo R
+
+`software/odontolesao/R/fct_motor_cpp.R` localiza o executável (`inst/bin`, a opção `mlodonto.cli` ou a
+variável `ML_ODONTO_CLI`) e o `.onnx`; `processar_lote()` usa o C++ para a probabilidade e mantém a detecção
+em R. Para forçar o R torch: `options(mlodonto.motor = "r")`. No teste com duas radiografias, os dois
+motores gravaram no banco as mesmas 7 lesões, com o mesmo centro, área e confiança.
+
+## Validação
+
+```bash
+python cpp/tools/validate_pipeline.py --cli cpp/build/zig-onnx/ml-odonto-cli.exe
 ```
 
-As coordenadas na API C++ são baseadas em zero. O arquivo JSON tem `schema_version` para permitir a
-evolução do contrato sem quebrar o aplicativo R durante a migração.
+Roda o `run` nas 20 panorâmicas marcadas e compara com os mapas do Python (`probs_UNET_V2.npz`) e com a
+avaliação por lesão publicada (`lesoes_validacao.csv`). Resultado em
+[`docs/EQUIVALENCIA_CPP.md`](../docs/EQUIVALENCIA_CPP.md): **aprovado**.
 
-## Critério para o próximo marco
+| Critério | Exigido | C++ |
+|---|---|---|
+| Lesões encontradas, uma a uma | as mesmas do Python (31/45) | 31/45, todas iguais |
+| Falsos positivos | 0 | 0 |
+| Correlação das probabilidades | ≥ 0,998 | ≥ 0,998 (mínimo 0,99814) |
+| Dice das máscaras C++ × Python | ≥ 0,95 | ≥ 0,988 |
 
-Antes de liberar inferência ou interface em C++, o executável deve ser comparado nas 20 panorâmicas de
-referência:
-
-- mesmas 31/45 lesões encontradas no limiar 0,5;
-- zero falsos positivos;
-- Dice C++ × R das máscaras ≥ 0,95;
-- correlação das probabilidades ≥ 0,998.
-
-Esses são os critérios já aprovados em `docs/EQUIVALENCIA_R_PYTHON.md`.
+`tools/compare_reference.py` isola só o pós-processamento (mesma probabilidade, detecção C++ × Python).

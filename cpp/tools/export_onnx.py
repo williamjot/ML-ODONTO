@@ -62,6 +62,7 @@ def main() -> None:
             },
             opset_version=args.opset,
             do_constant_folding=True,
+            dynamo=False,  # exportador TorchScript: eixos dinâmicos estáveis e sem depender do onnxscript
         )
 
     if args.verify:

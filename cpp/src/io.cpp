@@ -1,18 +1,29 @@
 #include "ml_odonto/io.hpp"
 
+#include "stb_image.h"
+#include "stb_image_write.h"
+
 #include <algorithm>
 #include <bit>
+#include <cctype>
 #include <cstddef>
 #include <cstring>
 #include <fstream>
 #include <iomanip>
 #include <limits>
+#include <sstream>
 #include <stdexcept>
 #include <string>
 #include <type_traits>
 
 namespace ml_odonto {
 namespace {
+
+// Caminho em UTF-8 (path::string() falha no Windows com nomes fora da página de código ANSI)
+std::string utf8(const std::filesystem::path& path) {
+    const auto text = path.u8string();
+    return {text.begin(), text.end()};
+}
 
 std::string next_token(std::istream& input) {
     std::string token;
@@ -38,10 +49,37 @@ T byte_swap(T value) {
 
 }  // namespace
 
+GrayImage read_image(const std::filesystem::path& path) {
+    auto extension = utf8(path.extension());
+    std::transform(extension.begin(), extension.end(), extension.begin(),
+                   [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
+    if (extension == ".tif" || extension == ".tiff") {
+        throw std::runtime_error("TIFF is not supported, convert to PNG first: " + utf8(path));
+    }
+    int width = 0;
+    int height = 0;
+    int channels = 0;
+    stbi_uc* pixels = stbi_load(utf8(path).c_str(), &width, &height, &channels, 1);
+    if (pixels == nullptr) {
+        throw std::runtime_error("cannot read image " + utf8(path) + ": " + stbi_failure_reason());
+    }
+    GrayImage result(static_cast<std::size_t>(height), static_cast<std::size_t>(width), 0);
+    std::memcpy(result.data(), pixels, result.size());
+    stbi_image_free(pixels);
+    return result;
+}
+
+void write_png(const std::filesystem::path& path, const GrayImage& image) {
+    const int width = static_cast<int>(image.width());
+    if (stbi_write_png(utf8(path).c_str(), width, static_cast<int>(image.height()), 1, image.data(), width) == 0) {
+        throw std::runtime_error("cannot write PNG file: " + utf8(path));
+    }
+}
+
 GrayImage read_pgm(const std::filesystem::path& path) {
     std::ifstream input(path, std::ios::binary);
     if (!input) {
-        throw std::runtime_error("cannot open PGM file: " + path.string());
+        throw std::runtime_error("cannot open PGM file: " + utf8(path));
     }
     if (next_token(input) != "P5") {
         throw std::runtime_error("only binary 8-bit PGM (P5) is supported");
@@ -63,7 +101,7 @@ GrayImage read_pgm(const std::filesystem::path& path) {
 void write_pgm(const std::filesystem::path& path, const GrayImage& image) {
     std::ofstream output(path, std::ios::binary);
     if (!output) {
-        throw std::runtime_error("cannot create PGM file: " + path.string());
+        throw std::runtime_error("cannot create PGM file: " + utf8(path));
     }
     output << "P5\n" << image.width() << ' ' << image.height() << "\n255\n";
     output.write(reinterpret_cast<const char*>(image.data()), static_cast<std::streamsize>(image.size()));
@@ -72,7 +110,7 @@ void write_pgm(const std::filesystem::path& path, const GrayImage& image) {
 FloatImage read_pfm(const std::filesystem::path& path) {
     std::ifstream input(path, std::ios::binary);
     if (!input) {
-        throw std::runtime_error("cannot open PFM file: " + path.string());
+        throw std::runtime_error("cannot open PFM file: " + utf8(path));
     }
     if (next_token(input) != "Pf") {
         throw std::runtime_error("only greyscale PFM (Pf) is supported");
@@ -104,7 +142,7 @@ FloatImage read_pfm(const std::filesystem::path& path) {
 void write_pfm(const std::filesystem::path& path, const FloatImage& image) {
     std::ofstream output(path, std::ios::binary);
     if (!output) {
-        throw std::runtime_error("cannot create PFM file: " + path.string());
+        throw std::runtime_error("cannot create PFM file: " + utf8(path));
     }
     const bool little_endian = std::endian::native == std::endian::little;
     output << "Pf\n" << image.width() << ' ' << image.height() << '\n'
@@ -116,15 +154,16 @@ void write_pfm(const std::filesystem::path& path, const FloatImage& image) {
     }
 }
 
-void write_detections_json(const std::filesystem::path& path,
-                           const std::vector<Detection>& detections,
-                           const std::vector<Component>& components, float threshold) {
+namespace {
+
+void write_json(const std::filesystem::path& path, const std::vector<Detection>& detections,
+                const std::vector<Component>& components, float threshold, const std::string& header) {
     std::ofstream output(path);
     if (!output) {
-        throw std::runtime_error("cannot create JSON file: " + path.string());
+        throw std::runtime_error("cannot create JSON file: " + utf8(path));
     }
     output << std::fixed << std::setprecision(6);
-    output << "{\n  \"schema_version\": 1,\n  \"threshold\": " << threshold
+    output << "{\n  \"schema_version\": 1,\n" << header << "  \"threshold\": " << threshold
            << ",\n  \"candidate_count\": " << detections.size() << ",\n  \"components\": [";
     for (std::size_t index = 0; index < components.size(); ++index) {
         const auto& component = components[index];
@@ -143,6 +182,26 @@ void write_detections_json(const std::filesystem::path& path,
                << (detection.confidence >= threshold ? "true" : "false") << '}';
     }
     output << (detections.empty() ? "" : "\n") << "  ]\n}\n";
+}
+
+}  // namespace
+
+void write_detections_json(const std::filesystem::path& path,
+                           const std::vector<Detection>& detections,
+                           const std::vector<Component>& components, float threshold) {
+    write_json(path, detections, components, threshold, "");
+}
+
+void write_detections_json(const std::filesystem::path& path,
+                           const std::vector<Detection>& detections,
+                           const std::vector<Component>& components, float threshold,
+                           std::size_t original_height, std::size_t original_width,
+                           double seconds) {
+    std::ostringstream header;
+    header << std::fixed << std::setprecision(3) << "  \"original_height\": " << original_height
+           << ",\n  \"original_width\": " << original_width << ",\n  \"seconds\": " << seconds
+           << ",\n";
+    write_json(path, detections, components, threshold, header.str());
 }
 
 }  // namespace ml_odonto

@@ -14,6 +14,11 @@ struct PreprocessingOptions {
 
 [[nodiscard]] GrayImage resize_area(const GrayImage& input, std::size_t output_height,
                                     std::size_t output_width);
+[[nodiscard]] FloatImage resize_area(const FloatImage& input, std::size_t output_height,
+                                     std::size_t output_width);
+// Altura proporcional, arredondada como no R/Python: round(altura * alvo / largura).
+[[nodiscard]] std::size_t height_for_width(std::size_t height, std::size_t width,
+                                           std::size_t target_width);
 [[nodiscard]] GrayImage resize_to_width(const GrayImage& input, std::size_t target_width);
 [[nodiscard]] GrayImage clahe(const GrayImage& input, double clip_limit = 2.0,
                               std::size_t grid = 8);
