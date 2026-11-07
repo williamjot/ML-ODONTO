@@ -1,8 +1,17 @@
 # ML ODONTO C++
 
-Motor de inferência C++20 do ML ODONTO. Faz o caminho completo da radiografia às lesões com a U-Net v2
-exportada para ONNX e reproduz a implementação de referência (Python e R) lesão a lesão. O aplicativo R
-usa este motor na tela **Aplicar** quando ele está instalado; sem ele, continua em R torch.
+O programa ML ODONTO nativo (C++20, Qt 6, ONNX Runtime), sem R:
+
+- **`desktop/`** — o programa com todas as telas (Início, Revisão, Auditoria, Resultados, Aplicar, Ajuda,
+  Configurações), sobre o mesmo banco do app R. Montagem: `python cpp/tools/build_desktop.py`, que gera a
+  pasta `ML ODONTO/` na raiz do projeto. Veja [`docs/MIGRACAO_CPP.md`](../docs/MIGRACAO_CPP.md).
+- **núcleo** (`include/`, `src/`) — o caminho da radiografia às lesões com a U-Net v2 exportada para ONNX,
+  que reproduz a implementação de referência (Python e R) lesão a lesão; também usado pelo app R.
+
+Opções do programa: `--dados <pasta>` (outra pasta de dados), `--tela <inicio|revisao|auditoria|resultados|
+aplicar|ajuda|config>` e `--aplicar <pasta>` (processa as radiografias da pasta ao abrir).
+
+O restante deste arquivo trata do núcleo.
 
 ## O que faz
 
@@ -47,9 +56,9 @@ ctest --preset default
 
 Nada disso vai para o repositório: `cpp/build/`, `cpp/.deps/`, `*.onnx` e `inst/bin/` estão no `.gitignore`.
 
-## Programa de janela própria (`ML ODONTO.exe`)
+## Lançador do app R em janela própria (substituído pelo programa nativo)
 
-`app/ml_odonto_app.cpp` é o programa que o usuário abre: uma janela nativa do Windows com WebView2 (o
+`app/ml_odonto_app.cpp` abre o **app R** numa janela nativa do Windows com WebView2 (o
 componente web que vem no Windows 10/11, via biblioteca [webview](https://github.com/webview/webview)),
 sem navegador e sem console. Ele:
 

@@ -11,8 +11,9 @@ verdade** e **ensiná-lo a encontrar as lesões que hoje escapam**, sobretudo as
 
 ## 1. Abrir o programa
 
-1. Na pasta do projeto, dê dois cliques em **`ML ODONTO.exe`** (ícone azul com um dente).
-2. O programa abre na própria janela e mostra "Carregando o programa…" por alguns segundos.
+1. Na pasta **`ML ODONTO`**, dê dois cliques em **`ML ODONTO.exe`** (ícone azul com um dente). Dica: clique com o
+   botão direito no arquivo e escolha *Enviar para > Área de trabalho (criar atalho)*.
+2. O programa abre na própria janela em poucos segundos.
 3. Na primeira vez, informe o **seu nome**. Cada revisor tem as próprias respostas; o nome aparece no canto
    superior direito e pode ser trocado em **Configurações**.
 4. Para sair, feche a janela. **Tudo já fica salvo** — não há botão "Salvar".
@@ -133,7 +134,7 @@ calcula a concordância entre os revisores.
 existente volta para a frente.
 
 **O programa não abre.** Feche o ML ODONTO e tente de novo. Se persistir, envie ao responsável técnico o
-arquivo de registro indicado na tela (fica em `%LOCALAPPDATA%\ML ODONTO\janela.log`).
+nome da pasta dos dados, que aparece na barra azul, embaixo, e uma foto da tela com a mensagem.
 
 **Onde ficam os dados?** Em `Documentos\OdontoLesao` (banco, cópias reduzidas das imagens e backups).
 

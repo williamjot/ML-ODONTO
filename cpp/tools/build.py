@@ -119,10 +119,6 @@ def main() -> None:
     run("ctest", "--test-dir", build, "--output-on-failure")
     if not args.no_install:
         run(sys.executable, CPP / "tools" / "install_into_app.py", "--build", build)
-        app = build / "ML ODONTO.exe"
-        if app.is_file():
-            shutil.copy2(app, CPP.parent / app.name)
-            print("programa:", CPP.parent / app.name)
         print("\nPronto. Reinstale o pacote R: R CMD INSTALL --no-test-load software/odontolesao")
 
 

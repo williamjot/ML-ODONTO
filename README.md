@@ -80,8 +80,10 @@ Validação nas 20 panorâmicas marcadas (45 lesões; cada paciente avaliado por
 
 ## O software ML ODONTO
 
-Programa local (Shiny + bslib) com aparência de ambiente de trabalho: painéis com abas e divisórias
-arrastáveis, barra de ferramentas e barra de status. Roda em `127.0.0.1`, sem nenhuma chamada à internet.
+Programa de computador **nativo** (C++20 e Qt 6), com aparência de ambiente de trabalho: painéis com abas e
+divisórias arrastáveis, barra de ferramentas e barra de status. Abre na própria janela, não precisa de R
+nem de Python e não faz nenhuma chamada à internet. É uma pasta (`ML ODONTO/`, ~150 MB) que se copia para
+qualquer Windows 10/11; os dados ficam em `Documentos\OdontoLesao`.
 
 | Tela | Para quê |
 |---|---|
@@ -92,27 +94,17 @@ arrastáveis, barra de ferramentas e barra de status. Roda em `127.0.0.1`, sem n
 | **Aplicar** | Roda a U-Net v2 em novas radiografias, em segundo plano, com barra de progresso; as detecções vão direto para a revisão |
 | **Ajuda** | Manual do dentista e atalhos |
 
-A rede roda **em R** (pacote `torch`), sem Python: o pré-processamento (redução por área e CLAHE) e a
-detecção foram reescritos e reproduzem o pipeline Python **lesão a lesão** nas 20 panorâmicas marcadas
-(31/45, correlação das probabilidades ≥ 0,998). Detalhes em [`docs/EQUIVALENCIA_R_PYTHON.md`](docs/EQUIVALENCIA_R_PYTHON.md).
+A rede roda com o ONNX Runtime: o pré-processamento (redução por área e CLAHE), a U-Net com espelhamento
+e a detecção reproduzem o pipeline Python **lesão a lesão** nas 20 panorâmicas marcadas (31/45, 0 falso
+positivo, correlação ≥ 0,998, Dice ≥ 0,988), a ~11 s por radiografia num PC de 8 GB. Detalhes em
+[`docs/EQUIVALENCIA_CPP.md`](docs/EQUIVALENCIA_CPP.md) e [`docs/MIGRACAO_CPP.md`](docs/MIGRACAO_CPP.md).
 
-## Motor de inferência em C++
+### Versão em R (referência)
 
-O diretório [`cpp/`](cpp/) contém um motor C++20 com ONNX Runtime que faz o caminho completo — radiografia
-→ normalização → U-Net (com espelhamento) → probabilidade → lesões. Ele reproduz a referência **lesão a
-lesão** nas 20 panorâmicas marcadas (31/45, 0 falso positivo, correlação ≥ 0,998, Dice ≥ 0,988) e leva
-~13 s por radiografia num PC de 8 GB; no mesmo lote de teste, 32 s contra 85 s do R torch.
-
-Quando está instalado, a tela **Aplicar** usa o motor C++ automaticamente (a detecção continua em R, a
-mesma já validada); sem ele, tudo funciona como antes em R torch. Para compilar e instalar, num comando:
-
-```bash
-python -m pip install cmake ninja ziglang onnx onnxruntime
-python cpp/tools/build.py
-```
-
-Detalhes, validação e critérios em [`cpp/README.md`](cpp/README.md) e
-[`docs/EQUIVALENCIA_CPP.md`](docs/EQUIVALENCIA_CPP.md).
+O mesmo programa existe como pacote R (Shiny, [`software/odontolesao`](software/odontolesao)), que foi a
+primeira versão e continua como implementação de referência: usa **o mesmo banco** e pode ser aberto no
+lugar do nativo (`Rscript -e "odontolesao::run_app()"`). A equivalência R × Python está em
+[`docs/EQUIVALENCIA_R_PYTHON.md`](docs/EQUIVALENCIA_R_PYTHON.md).
 
 ## Estrutura do repositório
 
@@ -120,10 +112,10 @@ Detalhes, validação e critérios em [`cpp/README.md`](cpp/README.md) e
 ML-ODONTO/
 ├── README.md                     este arquivo
 ├── LICENSE                       uso acadêmico e não comercial
-├── ML ODONTO.exe                 o programa (gerado por cpp/tools/build.py, fora do git)
+├── ML ODONTO/                    o programa pronto (montado por cpp/tools/build_desktop.py, fora do git)
 ├── Revisar_lesoes.bat           ferramenta de revisão antiga (Python), substituída pelo ML ODONTO
 │
-├── software/                     ── programa ML ODONTO (R)
+├── software/                     ── versão em R do programa (referência)
 │   ├── instalar_dependencias.R   instala pacotes, libtorch e o programa
 │   └── odontolesao/              pacote R
 │       ├── R/                    módulos das telas (mod_*.R) e núcleo (fct_*.R)
@@ -133,8 +125,10 @@ ML-ODONTO/
 │       ├── inst/sql/             migrações do banco SQLite
 │       └── tests/                testes unitários e teste de equivalência R × Python
 │
-├── cpp/                          ── motor de inferência C++ (ONNX Runtime)
+├── cpp/                          ── programa nativo (C++20, Qt 6, ONNX Runtime)
+│   ├── desktop/                  as telas: Início, Revisão, Auditoria, Resultados, Aplicar, Ajuda
 │   ├── include/, src/            núcleo: pré-processamento, detecção, pipeline, CLI
+│   ├── app/                      ícone, manifesto e versão do .exe
 │   ├── tests/                    testes unitários
 │   ├── third_party/stb/          leitura e gravação de PNG/JPEG (domínio público)
 │   └── tools/                    build, exportação ONNX, instalação no app e validação
@@ -162,8 +156,10 @@ partes de `Resultados/`. Veja [Dados, privacidade e ética](#dados-privacidade-e
 
 ## Instalação
 
-**Requisitos:** Windows 10/11, [R 4.6](https://cran.r-project.org/bin/windows/base/), 8 GB de RAM (16 GB
-recomendados para aplicar o modelo), ~2 GB livres em disco.
+**Para usar:** Windows 10/11 e 8 GB de RAM. Copie a pasta `ML ODONTO/` para o computador e dê dois cliques
+em `ML ODONTO.exe` — não é preciso instalar mais nada.
+
+**Para gerar a pasta a partir do código** (uma vez; baixa o Qt 6.8 e o ONNX Runtime, ~2 GB):
 
 1. Clone o repositório:
    ```bash
@@ -173,22 +169,19 @@ recomendados para aplicar o modelo), ~2 GB livres em disco.
 2. Coloque os **pesos dos modelos** (`unet_lesoes_v2.safetensors` e demais, distribuídos à parte — veja
    [`software/odontolesao/inst/modelos/LEIAME.md`](software/odontolesao/inst/modelos/LEIAME.md)) em
    `software/odontolesao/inst/modelos/`.
-3. Instale as dependências e o programa (uma vez; baixa ~200 MB do libtorch):
+3. Monte o programa:
    ```bash
-   Rscript software/instalar_dependencias.R
+   python -m pip install aqtinstall cmake ninja onnx onnxruntime torch safetensors
+   python cpp/tools/build_desktop.py
    ```
-4. Gere o programa (uma vez; também instala o motor C++):
-   ```bash
-   python -m pip install cmake ninja ziglang onnx onnxruntime
-   python cpp/tools/build.py
-   ```
-5. Abra com dois cliques em **`ML ODONTO.exe`**, na pasta do projeto. Ele abre na própria janela, sem
-   navegador nem console (usa o WebView2, que já vem no Windows 10/11). Sem o .exe, o programa também
-   abre com `Rscript -e "odontolesao::run_app()"`, no navegador.
+   O resultado é a pasta **`ML ODONTO/`** na raiz do projeto.
+4. Abra com dois cliques em **`ML ODONTO/ML ODONTO.exe`**.
 
-Na primeira execução, o programa importa as radiografias e as detecções da pasta do projeto (opção
-`odontolesao.projeto`) e guarda tudo em `Documentos\OdontoLesao` — banco SQLite, cópias reduzidas das
-imagens e backups diários.
+Para a versão em R: `Rscript software/instalar_dependencias.R` e depois `Rscript -e "odontolesao::run_app()"`.
+
+Os dados ficam em `Documentos\OdontoLesao` — banco SQLite, cópias reduzidas das imagens e backups diários.
+Num computador novo, o banco é criado vazio e as radiografias entram pela tela **Aplicar**. A importação do
+acervo do projeto (422 panorâmicas e a referência das 20 marcadas) é feita uma vez pela versão em R.
 
 ## Uso
 

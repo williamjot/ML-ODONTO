@@ -68,5 +68,6 @@ cpp/out/
 .claude/*
 !.claude/skills/
 
-# Programa de janela própria, gerado por cpp/tools/build.py
+# Programa nativo montado por cpp/tools/build_desktop.py (binários, não vão para o git)
+/ML ODONTO/
 /ML ODONTO.exe

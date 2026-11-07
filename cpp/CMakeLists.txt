@@ -109,3 +109,9 @@ if(ML_ODONTO_BUILD_TESTS)
     target_link_libraries(ml_odonto_core_tests PRIVATE ml_odonto::core)
     add_test(NAME ml_odonto_core_tests COMMAND ml_odonto_core_tests)
 endif()
+
+# ML ODONTO nativo em Qt 6 (migração das telas do app R). Precisa do Qt (CMAKE_PREFIX_PATH).
+option(ML_ODONTO_BUILD_DESKTOP "Build the native Qt desktop program" OFF)
+if(ML_ODONTO_BUILD_DESKTOP)
+    add_subdirectory(desktop)
+endif()
