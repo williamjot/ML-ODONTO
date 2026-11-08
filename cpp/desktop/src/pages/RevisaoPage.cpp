@@ -154,6 +154,19 @@ RevisaoPage::RevisaoPage(Context& ctx, QWidget* parent) : QWidget(parent), ctx_(
     reloadList();
 }
 
+RevisaoPage::~RevisaoPage() { flushObservations(); }
+
+// Grava na hora a observação que ainda esperava a pausa na digitação (ao trocar de imagem, concluir ou fechar)
+void RevisaoPage::flushObservations() {
+    if (!observationsTimer_->isActive()) {
+        return;
+    }
+    observationsTimer_->stop();
+    if (!current_.isEmpty() && (reviewId_ || !observations_->text().isEmpty())) {
+        ctx_.db.setObservations(reviewId(), observations_->text());
+    }
+}
+
 QVector<ReviewItem> RevisaoPage::filtered() const {
     QVector<ReviewItem> out;
     const int f = filter_->checkedId();
@@ -220,7 +233,7 @@ void RevisaoPage::open(const QString& imageId) {
     if (ctx_.reviewer.isEmpty() || !ctx_.model) {
         return;
     }
-    observationsTimer_->stop();
+    flushObservations();
     current_ = imageId;
     const ImageData d = ctx_.db.imageData(imageId, ctx_.modelId(), ctx_.reviewer);
     reviewId_ = d.reviewId;
@@ -275,18 +288,17 @@ void RevisaoPage::complete(bool confirmed) {
     if (current_.isEmpty()) {
         return;
     }
-    if (observationsTimer_->isActive()) {
-        observationsTimer_->stop();
-        ctx_.db.setObservations(reviewId(), observations_->text());
-    }
+    flushObservations();
     const ImageData d = ctx_.db.imageData(current_, ctx_.modelId(), ctx_.reviewer);
     const int missing = static_cast<int>(d.detections.size() - d.decisions.size());
     if (missing > 0 && !inadequate_->isChecked() && !confirmed) {
-        const auto answer = QMessageBox::question(
-            this, "Detecções sem decisão",
-            QStringLiteral("%1 detecção(ões) desta imagem ainda não têm decisão. Concluir mesmo assim?").arg(missing),
-            QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
-        if (answer != QMessageBox::Yes) {
+        QMessageBox box(QMessageBox::Question, "Detecções sem decisão",
+                        QStringLiteral("%1 detecção(ões) desta imagem ainda não têm decisão. Concluir mesmo assim?").arg(missing),
+                        QMessageBox::NoButton, this);
+        auto* finish = box.addButton("Concluir", QMessageBox::AcceptRole);
+        box.setDefaultButton(box.addButton("Voltar", QMessageBox::RejectRole));
+        box.exec();
+        if (box.clickedButton() != finish) {
             return;
         }
     }

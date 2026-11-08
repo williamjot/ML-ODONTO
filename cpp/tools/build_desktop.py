@@ -17,7 +17,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from build import DEPS, onnxruntime, run  # noqa: E402
+from build import DEPS, onnxruntime, run, webview  # noqa: E402
 
 CPP = Path(__file__).resolve().parents[1]
 ROOT = CPP.parent
@@ -56,12 +56,14 @@ def main() -> None:
     gcc = root / "Tools" / "mingw1310_64" / "bin"
     ort = onnxruntime(args.onnxruntime)
     build = CPP / "build" / "desktop"
+    webview_include, webview2_include = webview("0.12.0", "1.0.4258.31")
     if not (build / "build.ninja").is_file():
         run("cmake", "-S", CPP, "-B", build, "-G", "Ninja", "-DCMAKE_BUILD_TYPE=Release",
             f"-DCMAKE_C_COMPILER={(gcc / 'gcc.exe').as_posix()}", f"-DCMAKE_CXX_COMPILER={(gcc / 'g++.exe').as_posix()}",
             f"-DCMAKE_RC_COMPILER={Path(short(gcc / 'windres.exe')).as_posix()}",
             f"-DCMAKE_PREFIX_PATH={prefix.as_posix()}", "-DML_ODONTO_BUILD_DESKTOP=ON",
-            "-DML_ODONTO_WITH_ONNX=ON", f"-DONNXRUNTIME_ROOT={ort.as_posix()}")
+            "-DML_ODONTO_WITH_ONNX=ON", f"-DONNXRUNTIME_ROOT={ort.as_posix()}",
+            f"-DWEBVIEW_INCLUDE={webview_include.as_posix()}", f"-DWEBVIEW2_INCLUDE={webview2_include.as_posix()}")
     run("cmake", "--build", build)
 
     # pasta distribuível
@@ -73,7 +75,7 @@ def main() -> None:
     for dll in (ort / "lib").glob("*.dll"):
         shutil.copy2(dll, out)
     env_path = f"{gcc};{prefix / 'bin'}"
-    subprocess.run([str(prefix / "bin" / "windeployqt.exe"), "--release", "--compiler-runtime", "--no-translations",
+    subprocess.run([str(prefix / "bin" / "windeployqt.exe"), "--release", "--compiler-runtime", "--translations", "pt_BR",
                     "--no-system-d3d-compiler", "--no-opengl-sw", str(out / "ML ODONTO.exe")],
                    check=True, env={**__import__("os").environ, "PATH": env_path})
     model = ROOT / "software" / "odontolesao" / "inst" / "modelos" / "unet_lesoes_v2.onnx"

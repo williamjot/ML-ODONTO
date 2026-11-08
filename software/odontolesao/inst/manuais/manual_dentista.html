@@ -1,0 +1,698 @@
+<title>Manual do dentista ML ODONTO</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@87,500..800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Layout: navegação fixa à esquerda + coluna de leitura; o "filme" escuro da radiografia é a peça central */
+:root {
+  --paper: #eef2f6;      /* fundo de consultório, frio */
+  --surface: #ffffff;
+  --ink: #142231;
+  --muted: #566677;
+  --line: #d3dce5;
+  --accent: #1f6fb4;     /* azul do ML ODONTO */
+  --accent-soft: #e2edf8;
+  --film: #0a1016;       /* negatoscópio: igual nos dois temas */
+  --film-ink: #dfe8f1;
+  --ok: #1f9156; --no: #cf3b40; --doubt: #b98f0f; --add: #2b93e6;
+  --font-display: "Archivo", "Segoe UI Variable Display", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "Cascadia Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0d141b; --surface: #141e28; --ink: #e3eaf1; --muted: #9babbb; --line: #27343f;
+    --accent: #5aa7ea; --accent-soft: #17293a; --film: #05090d; --film-ink: #dfe8f1;
+    --ok: #3cc07c; --no: #f0676b; --doubt: #e2bb3d; --add: #5cb4f5; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0d141b; --surface: #141e28; --ink: #e3eaf1; --muted: #9babbb; --line: #27343f;
+  --accent: #5aa7ea; --accent-soft: #17293a; --film: #05090d; --film-ink: #dfe8f1;
+  --ok: #3cc07c; --no: #f0676b; --doubt: #e2bb3d; --add: #5cb4f5; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--paper); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { font-family: var(--font-display); font-stretch: 87%; line-height: 1.15; text-wrap: balance; margin: 0; }
+h2 { font-size: 1.75rem; font-weight: 750; letter-spacing: -0.01em; }
+h3 { font-size: 1.15rem; font-weight: 700; }
+p { margin: 0; }
+a { color: var(--accent); }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+kbd { font-family: var(--font-mono); font-size: 0.82em; font-weight: 700; display: inline-block; min-width: 1.7em; text-align: center;
+  padding: 0.05em 0.45em; border: 1px solid var(--line); border-bottom-width: 3px; border-radius: 6px; background: var(--surface); color: var(--ink); }
+code { font-family: var(--font-mono); font-size: 0.85em; background: var(--accent-soft); padding: 0.1em 0.35em; border-radius: 4px; overflow-wrap: anywhere; }
+mark { background: color-mix(in srgb, var(--doubt) 35%, transparent); color: inherit; border-radius: 2px; }
+
+.shell { max-width: 1180px; margin: 0 auto; display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 48px; padding-block: 32px 64px; }
+/* ---- navegação ---- */
+.nav { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 20px); align-self: start; display: grid; gap: 18px; }
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand svg { flex: none; }
+.brand b { font-family: var(--font-display); font-weight: 800; letter-spacing: 0.08em; font-size: 0.95rem; }
+.brand span { display: block; color: var(--muted); font-size: 0.78rem; letter-spacing: 0.02em; }
+.search { position: relative; }
+.search input { width: 100%; font: inherit; font-size: 0.92rem; padding: 0.55em 0.8em 0.55em 2.2em; border-radius: 8px;
+  border: 1px solid var(--line); background: var(--surface); color: var(--ink); }
+.search svg { position: absolute; left: 0.7em; top: 50%; translate: 0 -50%; color: var(--muted); }
+.toc { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.toc a { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; text-decoration: none; color: var(--muted);
+  font-size: 0.92rem; padding: 0.38em 0.7em; border-radius: 6px; border-left: 3px solid transparent; }
+.toc a:hover { color: var(--ink); background: var(--surface); }
+.toc a.on { color: var(--ink); font-weight: 700; border-left-color: var(--accent); background: var(--surface); }
+.toc .count { font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.toc .count.done { color: var(--ok); }
+.nav-note { font-size: 0.8rem; color: var(--muted); line-height: 1.45; }
+
+/* ---- conteúdo ---- */
+main { display: grid; gap: 72px; min-width: 0; }
+section { display: grid; gap: 20px; scroll-margin-top: 24px; min-width: 0; }
+.eyebrow { font-family: var(--font-mono); font-size: 0.74rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); font-weight: 700; }
+.lead { font-size: 1.12rem; max-width: 62ch; color: var(--ink); }
+.prose { max-width: 66ch; display: grid; gap: 12px; }
+.muted { color: var(--muted); }
+
+.hero { display: grid; gap: 22px; }
+.hero h1 { font-size: clamp(2.3rem, 5vw, 3.4rem); font-weight: 800; letter-spacing: -0.02em; }
+.hero h1 em { font-style: normal; color: var(--accent); }
+.notice { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: start; max-width: 66ch; padding: 14px 16px;
+  border: 1px solid var(--line); border-radius: 10px; background: var(--surface); font-size: 0.95rem; }
+.notice svg { color: var(--accent); margin-top: 3px; }
+
+/* rota em cinco passos: a ordem é a do trabalho */
+.route { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0;
+  border: 1px solid var(--line); border-radius: 12px; background: var(--surface); overflow: hidden; }
+.route li { padding: 16px; display: grid; gap: 6px; align-content: start; border-right: 1px solid var(--line); }
+.route li:last-child { border-right: 0; }
+.route .n { font-family: var(--font-mono); font-weight: 700; font-size: 0.78rem; color: var(--accent); }
+.route b { font-family: var(--font-display); font-size: 1rem; }
+.route span { font-size: 0.86rem; color: var(--muted); line-height: 1.45; }
+.route a { text-decoration: none; color: inherit; display: grid; gap: 6px; align-content: start; }
+
+/* passos com caixas de marcar */
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; max-width: 70ch; counter-reset: s; }
+.steps li { counter-increment: s; display: grid; grid-template-columns: 2rem 1fr; gap: 12px; align-items: start; }
+.steps li::before { content: counter(s); font-family: var(--font-mono); font-weight: 700; font-size: 0.85rem; width: 2rem; height: 2rem;
+  display: grid; place-items: center; border-radius: 50%; border: 1.5px solid var(--line); color: var(--muted); background: var(--surface); }
+.steps li.checked::before { content: "✓"; background: var(--ok); border-color: var(--ok); color: #fff; }
+.steps label { display: grid; grid-template-columns: auto 1fr; gap: 10px; cursor: pointer; padding-top: 0.2rem; }
+.steps input { margin-top: 0.35rem; accent-color: var(--ok); width: 1.05rem; height: 1.05rem; }
+.steps li.checked .t { color: var(--muted); }
+.t small { display: block; color: var(--muted); font-size: 0.88rem; margin-top: 2px; }
+
+/* mapa da janela */
+.window { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--surface); }
+.wbar { display: grid; grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); }
+.region { all: unset; box-sizing: border-box; cursor: pointer; display: flex; align-items: center; gap: 8px; padding: 9px 12px;
+  font-size: 0.8rem; color: var(--muted); border-bottom: 1px solid var(--line); }
+.region:hover, .region.on { background: var(--accent-soft); color: var(--ink); }
+.region:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
+.region .tag { font-family: var(--font-mono); font-weight: 700; font-size: 0.7rem; color: var(--accent); }
+.wbody { display: grid; grid-template-columns: 0.9fr 2.4fr; min-height: 190px; }
+.wbody .region { border-bottom: 0; align-items: flex-start; }
+.wbody .region:first-child { border-right: 1px solid var(--line); }
+.wpane-film { margin: 10px; border-radius: 6px; background: var(--film); flex: 1; min-height: 120px; display: grid; place-items: center;
+  color: color-mix(in srgb, var(--film-ink) 60%, transparent); font-size: 0.75rem; }
+.wstatus { background: var(--accent); }
+.wstatus .region { color: #fff; border: 0; }
+.wstatus .region:hover, .wstatus .region.on { background: color-mix(in srgb, #000 18%, var(--accent)); color: #fff; }
+.wstatus .region .tag { color: #fff; }
+.explain { margin-top: 12px; padding: 14px 16px; border-radius: 10px; background: var(--surface); border: 1px solid var(--line); min-height: 4.2em; max-width: 70ch; }
+.explain b { font-family: var(--font-display); }
+
+/* grupos da lista */
+.groups { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.group { padding: 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); display: grid; gap: 4px; align-content: start; }
+.group.first { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.group b { font-family: var(--font-display); }
+.group span { font-size: 0.86rem; color: var(--muted); line-height: 1.45; }
+.listrow { font-family: var(--font-mono); font-size: 0.85rem; display: inline-flex; gap: 12px; align-items: center; padding: 6px 12px;
+  border: 1px solid var(--line); border-radius: 8px; background: var(--surface); flex-wrap: wrap; }
+.dot { width: 0.8rem; height: 0.8rem; border-radius: 50%; border: 1.5px solid var(--muted); display: inline-block; vertical-align: -0.1em; }
+.dot.p { background: var(--doubt); border-color: var(--doubt); }
+.dot.c { background: var(--ok); border-color: var(--ok); }
+
+/* ---- simulador da revisão ---- */
+.sim { display: grid; grid-template-columns: minmax(0, 1fr) 270px; border-radius: 12px; overflow: hidden; border: 1px solid var(--line); background: var(--surface); }
+.film { position: relative; background: var(--film); color: var(--film-ink); display: grid; grid-template-rows: auto 1fr auto; min-width: 0; }
+.film:focus-visible { outline: 3px solid var(--add); outline-offset: -3px; }
+.film-top, .film-bottom { display: flex; gap: 12px; align-items: center; justify-content: space-between; padding: 8px 12px; font-size: 0.8rem;
+  background: color-mix(in srgb, #fff 4%, var(--film)); flex-wrap: wrap; }
+.film-top b { font-family: var(--font-mono); font-size: 0.82rem; }
+.film-bottom { color: color-mix(in srgb, var(--film-ink) 70%, transparent); }
+.film svg { width: 100%; height: auto; display: block; touch-action: none; }
+.film .focus-hint { position: absolute; inset: 40px 0 auto 0; text-align: center; font-size: 0.8rem; color: var(--film-ink); opacity: 0.85; pointer-events: none; }
+.film.focused .focus-hint { display: none; }
+.film.drawing svg { cursor: crosshair; }
+.side { padding: 14px; display: grid; gap: 10px; align-content: start; border-left: 1px solid var(--line); }
+.side h3 { font-size: 0.95rem; }
+.card { border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; display: grid; gap: 6px; cursor: pointer; }
+.card.sel { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.card .row { display: flex; justify-content: space-between; font-size: 0.85rem; }
+.card .row span { color: var(--muted); font-family: var(--font-mono); font-size: 0.75rem; }
+.choices { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+.choice { font: inherit; font-size: 0.75rem; padding: 3px 0; border-radius: 5px; cursor: pointer; background: transparent; border: 1px solid; }
+.choice.ok { color: var(--ok); border-color: var(--ok); } .choice.ok.on { background: var(--ok); color: #fff; }
+.choice.no { color: var(--no); border-color: var(--no); } .choice.no.on { background: var(--no); color: #fff; }
+.choice.doubt { color: var(--doubt); border-color: var(--doubt); } .choice.doubt.on { background: var(--doubt); color: #fff; }
+.btn { font: inherit; font-size: 0.85rem; padding: 6px 10px; border-radius: 7px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+.btn:hover { border-color: var(--accent); }
+.btn.on { background: var(--accent-soft); border-color: var(--accent); }
+.btn.go { background: var(--ok); border-color: var(--ok); color: #fff; }
+.added { font-size: 0.85rem; color: var(--add); display: flex; justify-content: space-between; }
+.added button { all: unset; cursor: pointer; color: var(--no); text-decoration: underline; font-size: 0.8rem; }
+.log { font-size: 0.85rem; color: var(--muted); min-height: 1.4em; }
+.log b { color: var(--ink); }
+.sim-legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 0.82rem; color: var(--muted); }
+.sw { display: inline-block; width: 0.8rem; height: 0.8rem; border-radius: 3px; vertical-align: -0.1em; margin-right: 4px; }
+
+/* teclado */
+.keys { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.key { all: unset; box-sizing: border-box; cursor: pointer; display: grid; gap: 8px; padding: 12px; border: 1px solid var(--line);
+  border-radius: 10px; background: var(--surface); transition: border-color .15s, transform .15s; }
+.key:hover, .key.lit { border-color: var(--accent); }
+.key.lit { transform: translateY(-2px); box-shadow: 0 6px 0 -3px var(--accent); }
+.key:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.key .caps { display: flex; gap: 4px; flex-wrap: wrap; }
+.key .caps kbd { font-size: 0.95rem; padding: 0.15em 0.55em; }
+.key span { font-size: 0.86rem; color: var(--muted); line-height: 1.4; }
+
+/* auditoria */
+.panels { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.panel { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--surface); }
+.thumb { aspect-ratio: 4 / 3; background: var(--film); position: relative; max-width: 100%; }
+.thumb svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.panel p { padding: 10px 12px; font-size: 0.86rem; color: var(--muted); line-height: 1.45; }
+.panel p b { color: var(--ink); display: block; font-family: var(--font-display); }
+.answers { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.answer { padding: 14px 16px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); display: grid; gap: 4px; }
+.answer b { font-family: var(--font-display); }
+.answer span { font-size: 0.9rem; color: var(--muted); }
+
+/* tabelas e perguntas */
+.tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); max-width: 78ch; }
+table { border-collapse: collapse; width: 100%; font-size: 0.92rem; }
+th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+tr:last-child td { border-bottom: 0; }
+th { font-family: var(--font-display); font-size: 0.82rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); background: var(--accent-soft); }
+details { border: 1px solid var(--line); border-radius: 10px; background: var(--surface); max-width: 78ch; }
+details + details { margin-top: -10px; }
+summary { cursor: pointer; padding: 14px 16px; font-weight: 700; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
+summary::-webkit-details-marker { display: none; }
+summary::after { content: "+"; font-family: var(--font-mono); color: var(--accent); }
+details[open] summary::after { content: "−"; }
+details > div { padding: 0 16px 16px; color: var(--ink); display: grid; gap: 8px; }
+.goto { display: none; }
+.app .goto { display: inline-flex; }
+.empty { padding: 24px; border: 1px dashed var(--line); border-radius: 10px; color: var(--muted); }
+footer { color: var(--muted); font-size: 0.85rem; border-top: 1px solid var(--line); padding-top: 18px; }
+
+@media (max-width: 900px) {
+  .shell { grid-template-columns: minmax(0, 1fr); gap: 28px; padding-block: 20px 48px; }
+  .nav { position: static; }
+  .toc { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .route { grid-template-columns: minmax(0, 1fr); }
+  .route li { border-right: 0; border-bottom: 1px solid var(--line); }
+  .groups, .panels { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sim { grid-template-columns: minmax(0, 1fr); }
+  .side { border-left: 0; border-top: 1px solid var(--line); }
+}
+@media (max-width: 520px) {
+  .groups, .panels, .answers { grid-template-columns: minmax(0, 1fr); }
+  .toc { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: max-content; overflow-x: auto; padding-bottom: 4px; }
+  .wbody { grid-template-columns: minmax(0, 1fr); }
+  .wbody .region:first-child { border-right: 0; border-bottom: 1px solid var(--line); }
+  h2 { font-size: 1.45rem; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+html { scroll-behavior: smooth; }
+</style>
+
+<div class="shell">
+  <nav class="nav" aria-label="Seções do manual">
+    <div class="brand">
+      <svg width="34" height="34" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="14" fill="#1F6FB4"/><path d="M20 14c-6 0-9 5-9 11 0 7 4 10 5 17 1 6 2 10 5 10 3 0 3-5 4-9 1-3 2-5 4-5h2c2 0 3 2 4 5 1 4 1 9 4 9 3 0 4-4 5-10 1-7 5-10 5-17 0-6-3-11-9-11-5 0-7 3-12 3s-7-3-12-3z" fill="#fff"/><circle cx="44" cy="47" r="7" fill="none" stroke="#7FE0FF" stroke-width="3"/></svg>
+      <div><b>ML ODONTO</b><span>Manual do dentista</span></div>
+    </div>
+    <div class="search">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+      <input id="busca" type="search" placeholder="Buscar no manual" aria-label="Buscar no manual" autocomplete="off">
+    </div>
+    <ol class="toc" id="toc"></ol>
+    <p class="nav-note">As caixas que você marca ficam salvas neste computador.</p>
+  </nav>
+
+  <main id="conteudo">
+    <section class="hero" id="inicio" data-title="Início">
+      <p class="eyebrow">Lesões periapicais em panorâmicas</p>
+      <h1>Revise o que a rede viu, <em>e o que ela deixou passar</em>.</h1>
+      <p class="lead">O ML ODONTO marca nas radiografias panorâmicas as lesões periapicais que uma rede neural encontrou e pede o seu julgamento. Suas respostas medem quanto o programa acerta de verdade e ensinam a ele as lesões que hoje escapam, sobretudo as pequenas e as da maxila.</p>
+      <div class="notice">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M12 3 2.5 20h19L12 3z"/><path d="M12 10v4M12 17.5v.5"/></svg>
+        <p>O programa apoia a leitura e não substitui o diagnóstico. Julgue sempre o que é visível na panorâmica. Tudo roda neste computador: nenhuma radiografia é enviada para a internet.</p>
+      </div>
+      <ol class="route" aria-label="Roteiro de trabalho">
+        <li><a href="#abrir"><p class="n">1</p><b>Abrir</b><span>Dois cliques em ML ODONTO.exe e o seu nome.</span></a></li>
+        <li><a href="#revisar"><p class="n">2</p><b>Revisar a amostra</b><span>Comece pelas 60 imagens sorteadas.</span></a></li>
+        <li><a href="#revisar"><p class="n">3</p><b>Decidir e desenhar</b><span>Confirme, rejeite, marque dúvida e desenhe o que faltou.</span></a></li>
+        <li><a href="#auditoria"><p class="n">4</p><b>Auditar</b><span>Julgue as lesões de referência que o programa perdeu.</span></a></li>
+        <li><a href="#numeros"><p class="n">5</p><b>Acompanhar</b><span>Veja a precisão e a sensibilidade se atualizarem.</span></a></li>
+      </ol>
+    </section>
+
+    <section id="abrir" data-title="Abrir o programa">
+      <p class="eyebrow">Passo 1</p>
+      <h2>Abrir o programa</h2>
+      <ol class="steps" data-group="abrir">
+        <li><label><input type="checkbox" id="abrir-1"><span class="t">Na pasta <b>ML ODONTO</b>, dê dois cliques em <b>ML ODONTO.exe</b>, o ícone azul com um dente.<small>Para ter um atalho: clique com o botão direito no arquivo e escolha Enviar para › Área de trabalho (criar atalho).</small></span></label></li>
+        <li><label><input type="checkbox" id="abrir-2"><span class="t">O programa abre na própria janela em poucos segundos.<small>Se ele já estiver aberto, a janela existente volta para a frente.</small></span></label></li>
+        <li><label><input type="checkbox" id="abrir-3"><span class="t">Na primeira vez, escreva o <b>seu nome</b> e clique em OK.<small>Cada revisor tem as próprias respostas. O nome aparece no canto superior direito e pode ser trocado em Configurações.</small></span></label></li>
+        <li><label><input type="checkbox" id="abrir-4"><span class="t">Para sair, feche a janela. <b>Tudo já fica salvo</b>: não existe botão Salvar.</span></label></li>
+      </ol>
+    </section>
+
+    <section id="tela" data-title="Conhecendo a tela">
+      <p class="eyebrow">Orientação</p>
+      <h2>Conhecendo a tela</h2>
+      <p class="prose muted">Clique em cada parte da janela para ver o que ela faz.</p>
+      <div>
+        <div class="window" role="group" aria-label="Esquema da janela do ML ODONTO">
+          <div class="wbar">
+            <button class="region" data-k="telas"><span class="tag">A</span>Início · Revisão · Auditoria · Resultados · Aplicar · Ajuda · Configurações</button>
+          </div>
+          <div class="wbar">
+            <button class="region" data-k="ferramentas"><span class="tag">B</span>Continuar revisão · Auditoria · Resultados · ↻ · backup · ?</button>
+            <button class="region" data-k="pilulas"><span class="tag">C</span>revisor · modelo</button>
+          </div>
+          <div class="wbody">
+            <button class="region" data-k="lista"><span class="tag">D</span>Painel da esquerda</button>
+            <button class="region" data-k="paineis" style="flex-direction:column;align-items:stretch"><span><span class="tag">E</span> Painel principal</span><span class="wpane-film">radiografia</span></button>
+          </div>
+          <div class="wstatus">
+            <button class="region" data-k="status"><span class="tag">F</span>Pronto · Amostra 0/60 · 0 de 422 revisadas · gravado às …</button>
+          </div>
+        </div>
+        <div class="explain" id="explica" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section id="revisar" data-title="Revisar as detecções">
+      <p class="eyebrow">Passos 2 e 3 · tarefa principal</p>
+      <h2>Revisar as detecções</h2>
+      <p class="prose">Abra a tela <b>Revisão</b> ou clique em <b>Continuar revisão</b>, na barra de ferramentas. <button class="btn goto" data-tela="revisao">Abrir a Revisão agora</button></p>
+
+      <h3>A ordem das imagens</h3>
+      <div class="groups">
+        <div class="group first"><b>1º Amostra aleatória</b><span>60 imagens sorteadas. Comece sempre por aqui: só elas medem o programa sem viés.</span></div>
+        <div class="group"><b>4 ou mais detecções</b><span>Imagens em que o programa marcou muito; é onde mais erra para mais.</span></div>
+        <div class="group"><b>Nenhuma detecção</b><span>O programa não marcou nada. Procure o que ele pode ter perdido.</span></div>
+        <div class="group"><b>Demais imagens</b><span>Uma a três detecções.</span></div>
+      </div>
+      <div class="prose">
+        <p>Cada linha da lista mostra a situação, o código da imagem, quantas detecções ela tem e o nome do arquivo:</p>
+        <p><span class="listrow"><span><span class="dot"></span> pendente</span><span><span class="dot p"></span> começada</span><span><span class="dot c"></span> concluída</span><span>A247 &nbsp;6 &nbsp;arquivo.jpg</span></span></p>
+        <p class="muted">Os filtros Todas, Pendentes e Concluídas, no alto da lista, ajudam a encontrar uma imagem.</p>
+      </div>
+
+      <h3>Revisar uma imagem</h3>
+      <ol class="steps" data-group="revisar">
+        <li><label><input type="checkbox" id="rev-1"><span class="t"><b>Olhe primeiro sem a ajuda da máquina.</b> Aperte <kbd>H</kbd> para esconder as marcações, procure as lesões e aperte <kbd>H</kbd> de novo para ver o que o programa marcou.<small>Em Configurações dá para abrir as imagens ainda não revisadas já com as marcações ocultas (modo cego).</small></span></label></li>
+        <li><label><input type="checkbox" id="rev-2"><span class="t">Para cada contorno numerado, decida: <kbd>1</kbd> confirma, <kbd>2</kbd> rejeita, <kbd>3</kbd> dúvida.<small>Passe de uma detecção a outra com <kbd>Tab</kbd>, clicando no contorno ou no cartão à direita. Clicar de novo na mesma decisão a desfaz.</small></span></label></li>
+        <li><label><input type="checkbox" id="rev-3"><span class="t"><b>Desenhe a lesão que o programa não marcou.</b> Aperte <kbd>M</kbd> (ou Marcar lesão não detectada) e contorne a lesão segurando o botão do mouse.<small>É o passo mais valioso: são exatamente os exemplos que faltam ao programa. Para apagar, clique em remover ao lado da lesão adicionada; <kbd>Esc</kbd> cancela um desenho.</small></span></label></li>
+        <li><label><input type="checkbox" id="rev-4"><span class="t">Se a radiografia não permite avaliação, marque <b>Imagem inadequada</b>, no rodapé.</span></label></li>
+        <li><label><input type="checkbox" id="rev-5"><span class="t">Se quiser, escreva uma observação no rodapé, por exemplo “lesões 2 e 3 são a mesma lesão”.</span></label></li>
+        <li><label><input type="checkbox" id="rev-6"><span class="t">Aperte <kbd>Enter</kbd> ou <b>Concluir e ir para a próxima</b>.<small>Se faltar decidir alguma detecção, o programa pergunta: Concluir ou Voltar.</small></span></label></li>
+      </ol>
+      <p class="prose muted">As teclas funcionam com a radiografia em foco. Se não responderem, clique uma vez sobre a imagem.</p>
+
+      <h3>Treine aqui</h3>
+      <p class="prose muted">Uma panorâmica de exemplo com três detecções. Clique nela e use as mesmas teclas do programa.</p>
+      <div class="sim" id="sim">
+        <div class="film" id="film" tabindex="0" aria-label="Radiografia de treino: use 1, 2, 3, Tab, H, M e Enter">
+          <div class="film-top"><b id="sim-titulo">T001 · 3 detecção(ões)</b><span>Salvo às <span id="sim-hora">—</span></span></div>
+          <svg id="pano" viewBox="0 0 800 380" role="img" aria-label="Panorâmica de exemplo">
+            <defs>
+              <radialGradient id="g1" cx="50%" cy="55%" r="60%"><stop offset="0" stop-color="#5d6a76"/><stop offset="0.65" stop-color="#2a333c"/><stop offset="1" stop-color="#0a1016"/></radialGradient>
+              <linearGradient id="dente" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9eef3"/><stop offset="1" stop-color="#9aa6b1"/></linearGradient>
+              <linearGradient id="raiz" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b9c3cc"/><stop offset="1" stop-color="#55616c"/></linearGradient>
+            </defs>
+            <rect width="800" height="380" fill="url(#g1)"/>
+            <path d="M60 230 Q400 330 740 230 L740 330 Q400 380 60 330 Z" fill="#46525d" opacity=".55"/>
+            <path d="M80 120 Q400 40 720 120 L720 60 Q400 0 80 60 Z" fill="#46525d" opacity=".45"/>
+            <g id="dentes"></g>
+            <g id="marcas"></g>
+            <g id="desenho"></g>
+            <text x="22" y="362" fill="#dfe8f1" font-family="Archivo, sans-serif" font-weight="700" font-size="18">R</text>
+            <text x="764" y="362" fill="#dfe8f1" font-family="Archivo, sans-serif" font-weight="700" font-size="18">L</text>
+          </svg>
+          <div class="focus-hint">Clique na imagem para usar o teclado</div>
+          <div class="film-bottom"><span id="sim-dica">Clique num contorno ou use Tab · H oculta · M desenha</span>
+            <span style="display:flex;gap:6px"><button class="btn" id="bt-cego" type="button">Ocultar marcações</button><button class="btn" id="bt-marcar" type="button">Marcar lesão (M)</button></span></div>
+        </div>
+        <div class="side">
+          <div class="sim-legend"><span><i class="sw" style="background:var(--film-ink);border:1px solid var(--muted)"></i>a decidir</span><span><i class="sw" style="background:var(--ok)"></i>confirmada</span><span><i class="sw" style="background:var(--no)"></i>rejeitada</span><span><i class="sw" style="background:var(--doubt)"></i>dúvida</span><span><i class="sw" style="background:var(--add)"></i>adicionada</span></div>
+          <h3>Detecções do modelo</h3>
+          <div id="cartoes" style="display:grid;gap:8px"></div>
+          <h3>Lesões não detectadas</h3>
+          <div id="adicionadas" style="display:grid;gap:4px"><p class="muted" style="font-size:.85rem">Nenhuma. Aperte M e desenhe sobre a imagem.</p></div>
+          <button class="btn go" id="bt-concluir" type="button">✓ Concluir e ir para a próxima</button>
+          <p class="log" id="sim-log" aria-live="polite"></p>
+        </div>
+      </div>
+
+      <h3>Navegar na imagem</h3>
+      <div class="tablewrap"><table>
+        <thead><tr><th>Ação</th><th>Como</th></tr></thead>
+        <tbody>
+          <tr><td>Zoom</td><td>Roda do mouse; aproxima no ponto do cursor</td></tr>
+          <tr><td>Mover</td><td>Clicar fora dos contornos e arrastar</td></tr>
+          <tr><td>Ajustar à tela</td><td>Tecla <kbd>0</kbd> ou botão Ajustar</td></tr>
+          <tr><td>Contraste e brilho</td><td>Controles na barra escura abaixo da imagem</td></tr>
+          <tr><td>Imagem anterior ou próxima</td><td>Setas <kbd>←</kbd> e <kbd>→</kbd>, ou os botões no rodapé</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Situações comuns</h3>
+      <div>
+        <details><summary>Duas lesões vizinhas viraram um contorno só</summary><div><p>Confirme e anote na observação. Se uma delas ficou de fora do contorno, desenhe-a com <kbd>M</kbd>.</p></div></details>
+        <details><summary>O contorno pegou a lesão, mas ficou maior ou menor</summary><div><p>Confirme. O que importa é se a lesão foi encontrada, não o tamanho exato do contorno.</p></div></details>
+        <details><summary>Quero mudar uma resposta</summary><div><p>Abra a imagem pela lista e mude a decisão. Vale sempre a última resposta.</p></div></details>
+        <details><summary>Concluí uma imagem sem querer</summary><div><p>Abra a imagem de novo pela lista, use o filtro Concluídas se precisar, e ajuste as decisões. Ela continua contada como concluída.</p></div></details>
+      </div>
+    </section>
+
+    <section id="auditoria" data-title="Auditoria">
+      <p class="eyebrow">Passo 4</p>
+      <h2>Auditoria das lesões não encontradas</h2>
+      <p class="prose">Na tela <b>Auditoria</b> aparecem as lesões <b>marcadas por especialista</b> nas 20 panorâmicas de referência que o programa <b>não</b> encontrou. Escolha o modelo avaliado no painel da esquerda (o padrão é a U-Net v2) e use o filtro Sem resposta para ver só o que falta. <button class="btn goto" data-tela="auditoria">Abrir a Auditoria agora</button></p>
+      <div class="panels">
+        <div class="panel"><div class="thumb"><svg viewBox="0 0 160 120" aria-hidden="true"><rect width="160" height="120" fill="#202932"/><path d="M14 72 Q80 104 146 72 L146 92 Q80 118 14 92Z" fill="#5d6873"/><path d="M14 44 Q80 18 146 44 L146 30 Q80 6 14 30Z" fill="#5d6873"/><rect x="34" y="30" width="30" height="24" fill="none" stroke="#ff8c00" stroke-width="2.5"/></svg></div><p><b>Panorâmica</b>O retângulo laranja mostra onde está a lesão.</p></div>
+        <div class="panel"><div class="thumb"><svg viewBox="0 0 160 120" aria-hidden="true"><rect width="160" height="120" fill="#3c4650"/><rect x="58" y="10" width="20" height="70" rx="8" fill="#c3ccd4"/><rect x="88" y="14" width="18" height="64" rx="8" fill="#b4bec8"/><circle cx="70" cy="92" r="11" fill="#2b333b"/></svg></div><p><b>Ampliado, sem marcação</b>Julgue primeiro olhando só a imagem.</p></div>
+        <div class="panel"><div class="thumb"><svg viewBox="0 0 160 120" aria-hidden="true"><rect width="160" height="120" fill="#3c4650"/><rect x="58" y="10" width="20" height="70" rx="8" fill="#c3ccd4"/><rect x="88" y="14" width="18" height="64" rx="8" fill="#b4bec8"/><circle cx="70" cy="92" r="11" fill="#2b333b" stroke="#00c7ff" stroke-width="2"/><path d="M60 88 q10 -10 20 0" fill="none" stroke="#ff8c00" stroke-width="2.5"/><path d="M110 40 q8 -6 14 2" fill="none" stroke="#ebebeb" stroke-width="2"/></svg></div><p><b>Traço e máscara</b>Laranja: o traço desta lesão. Ciano: a área usada na avaliação. Branco: outras lesões.</p></div>
+        <div class="panel"><div class="thumb"><svg viewBox="0 0 160 120" aria-hidden="true"><defs><radialGradient id="v" cx="44%" cy="76%" r="40%"><stop offset="0" stop-color="#fde725"/><stop offset=".4" stop-color="#21918c"/><stop offset="1" stop-color="#440154"/></radialGradient></defs><rect width="160" height="120" fill="#440154"/><rect width="160" height="120" fill="url(#v)" opacity=".75"/><circle cx="70" cy="92" r="11" fill="none" stroke="#fff" stroke-width="1.6"/></svg></div><p><b>Probabilidade</b>O que o programa “viu”: amarelo é probabilidade alta, roxo é baixa.</p></div>
+      </div>
+      <h3>Responda uma destas quatro</h3>
+      <div class="answers">
+        <div class="answer"><b>Lesão visível na panorâmica</b><span>É uma lesão e dá para ver nesta imagem.</span></div>
+        <div class="answer"><b>Duvidosa</b><span>Não dá para afirmar só pela panorâmica.</span></div>
+        <div class="answer"><b>Não visível na panorâmica</b><span>Pode existir, por exemplo vista em tomografia, mas não aparece aqui.</span></div>
+        <div class="answer"><b>Não é lesão / erro de marcação</b><span>Traço acidental, pedaço de outra lesão ou marcação no lugar errado.</span></div>
+      </div>
+      <p class="prose muted">Os avisos em amarelo no título do cartão (“vizinha de uma lesão encontrada”, “muito pequena”) são pistas, não respostas. As respostas corrigem a referência usada para medir o programa e aparecem em Resultados.</p>
+    </section>
+
+    <section id="numeros" data-title="Acompanhar os números">
+      <p class="eyebrow">Passo 5</p>
+      <h2>Acompanhar os números</h2>
+      <div class="tablewrap"><table>
+        <thead><tr><th>Onde</th><th>O que mostra</th></tr></thead>
+        <tbody>
+          <tr><td><b>Início › Fluxo de trabalho</b></td><td>O caminho dos dados até a sua revisão, com os números de hoje. O botão Continuar revisão leva à próxima imagem pendente.</td></tr>
+          <tr><td><b>Início › Ambiente</b></td><td>Acervo, precisão na amostra aleatória com intervalo de confiança de 95%, decisões, lesões adicionadas e a sensibilidade do modelo, original e corrigida pela auditoria.</td></tr>
+          <tr><td><b>Início › Atividade</b></td><td>O registro do que foi feito e quando.</td></tr>
+          <tr><td><b>Resultados › Validação</b></td><td>Desempenho dos modelos nas 20 panorâmicas marcadas: curvas FROC, sensibilidade, precisão e Dice, e o mapa das 45 lesões. Em Referência corrigida pela auditoria você escolhe quais respostas excluir da referência.</td></tr>
+          <tr><td><b>Resultados › Revisão do acervo</b></td><td>Precisão e sensibilidade estimadas pelas suas revisões e, quando dois revisores concluírem as mesmas imagens, a concordância entre eles (kappa).</td></tr>
+        </tbody>
+      </table></div>
+      <p class="prose muted">Cada gráfico tem o botão PNG, que salva a figura em alta resolução.</p>
+    </section>
+
+    <section id="aplicar" data-title="Aplicar a novas radiografias">
+      <p class="eyebrow">Novas radiografias</p>
+      <h2>Aplicar o programa a novas radiografias</h2>
+      <ol class="steps" data-group="aplicar">
+        <li><label><input type="checkbox" id="apl-1"><span class="t">Abra a tela <b>Aplicar</b>. <button class="btn goto" data-tela="aplicar" type="button">Abrir</button></span></label></li>
+        <li><label><input type="checkbox" id="apl-2"><span class="t">Clique em <b>Pasta…</b> e escolha a pasta com as radiografias (JPG, PNG, TIFF ou BMP).<small>Você também pode colar o caminho no campo e apertar Enter, ou usar Selecionar arquivos… para escolher radiografias soltas. Aparece quantas foram encontradas e o tempo estimado.</small></span></label></li>
+        <li><label><input type="checkbox" id="apl-3"><span class="t">Mantenha o <b>limiar de confiança em 0,50</b>, o validado.<small>Valores menores encontram mais lesões e mais alarmes falsos.</small></span></label></li>
+        <li><label><input type="checkbox" id="apl-4"><span class="t">Clique em <b>Aplicar o modelo</b>.<small>Cada radiografia leva cerca de 10 a 15 segundos. O painel Andamento mostra quantas faltam e o tempo restante. Pode continuar trabalhando nas outras telas; Cancelar para depois da radiografia atual e mantém as já processadas.</small></span></label></li>
+        <li><label><input type="checkbox" id="apl-5"><span class="t">Ao terminar, as novas imagens entram na lista da Revisão, no grupo que corresponde ao número de detecções. Na tabela Radiografias processadas, selecione uma linha e clique em <b>Revisar selecionada</b> para abri-la direto.<small>O botão CSV exporta as detecções processadas para uma planilha.</small></span></label></li>
+      </ol>
+      <p class="prose muted">Com Pular radiografias que já estão no banco marcado, rodar a mesma pasta de novo não repete nada. Imagens já revisadas nunca têm as detecções substituídas.</p>
+    </section>
+
+    <section id="atalhos" data-title="Atalhos de teclado">
+      <p class="eyebrow">Referência</p>
+      <h2>Atalhos de teclado</h2>
+      <p class="prose muted">Valem na Revisão, com a radiografia em foco. No simulador acima, a tecla apertada acende aqui.</p>
+      <div class="keys" id="teclas">
+        <button class="key" data-key="1"><span class="caps"><kbd>1</kbd></span><span>Confirma a detecção selecionada</span></button>
+        <button class="key" data-key="2"><span class="caps"><kbd>2</kbd></span><span>Rejeita (o contorno fica vermelho, tracejado)</span></button>
+        <button class="key" data-key="3"><span class="caps"><kbd>3</kbd></span><span>Dúvida</span></button>
+        <button class="key" data-key="Tab"><span class="caps"><kbd>Tab</kbd><kbd>Shift</kbd><kbd>Tab</kbd></span><span>Próxima detecção · anterior</span></button>
+        <button class="key" data-key="m"><span class="caps"><kbd>M</kbd><kbd>Esc</kbd></span><span>Desenhar lesão não detectada · cancelar</span></button>
+        <button class="key" data-key="h"><span class="caps"><kbd>H</kbd></span><span>Esconder ou mostrar as marcações</span></button>
+        <button class="key" data-key="0"><span class="caps"><kbd>0</kbd></span><span>Ajustar a imagem à tela</span></button>
+        <button class="key" data-key="Enter"><span class="caps"><kbd>Enter</kbd></span><span>Concluir a imagem e ir para a próxima</span></button>
+        <button class="key" data-key="Arrow"><span class="caps"><kbd>←</kbd><kbd>→</kbd></span><span>Imagem anterior · próxima</span></button>
+      </div>
+    </section>
+
+    <section id="perguntas" data-title="Perguntas frequentes">
+      <p class="eyebrow">Dúvidas</p>
+      <h2>Perguntas frequentes</h2>
+      <div>
+        <details><summary>Perdi meu trabalho?</summary><div><p>Não. Cada clique é gravado na hora no banco de dados, e uma cópia de segurança é feita sozinha todo dia (as sete mais recentes ficam guardadas). Para uma cópia extra: Configurações › Fazer backup agora, ou o botão de disquete na barra de ferramentas.</p></div></details>
+        <details><summary>Duas pessoas podem revisar?</summary><div><p>Sim. Cada uma usa o próprio nome, em Configurações › Nome do revisor. As respostas ficam separadas, e o programa calcula a concordância entre os revisores em Resultados › Revisão do acervo.</p></div></details>
+        <details><summary>Fechei sem querer</summary><div><p>Dê dois cliques de novo em ML ODONTO.exe. Nada se perde. Se o programa ainda estiver aberto, a janela volta para a frente.</p></div></details>
+        <details><summary>As teclas 1, 2, 3 não fazem nada</summary><div><p>Clique uma vez sobre a radiografia: as teclas valem quando ela está em foco. Depois de escrever uma observação, o foco fica no campo de texto.</p></div></details>
+        <details><summary>O programa não abre</summary><div><p>Feche o ML ODONTO e tente de novo. Se persistir, envie ao responsável técnico uma foto da mensagem e o caminho da pasta dos dados, que aparece em Configurações e na barra azul, embaixo.</p></div></details>
+        <details><summary>Onde ficam os dados?</summary><div><p>Em <code>Documentos\OdontoLesao</code>: o banco, as cópias reduzidas das imagens e os backups. Configurações › Abrir a pasta leva até lá. Para levar o trabalho a outro computador, copie essa pasta inteira.</p></div></details>
+      </div>
+    </section>
+
+    <div class="empty" id="sem-resultado" hidden>Nada encontrado no manual para essa busca.</div>
+    <footer>ML ODONTO · Laboratório de Estudos Eletromagnéticos (LEMAG), Universidade de Brasília. Uso acadêmico e não comercial.</footer>
+  </main>
+</div>
+
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const store = {
+    get(k) { try { return JSON.parse(localStorage.getItem('mlodonto-manual-' + k)); } catch (e) { return null; } },
+    set(k, v) { try { localStorage.setItem('mlodonto-manual-' + k, JSON.stringify(v)); } catch (e) {} }
+  };
+
+  // Dentro do programa: botões que levam direto à tela (window.irPara é ligado pelo ML ODONTO)
+  if (typeof window.irPara === 'function') {
+    document.documentElement.classList.add('app');
+    $$('.goto').forEach(b => b.addEventListener('click', () => window.irPara(b.dataset.tela)));
+  }
+
+  // ---------- índice com contagem dos passos marcados
+  const sections = $$('main > section');
+  const toc = $('#toc');
+  sections.forEach(s => {
+    const li = document.createElement('li');
+    li.innerHTML = `<a href="#${s.id}"><span>${s.dataset.title}</span><span class="count"></span></a>`;
+    toc.appendChild(li);
+  });
+  function refreshCounts() {
+    sections.forEach(s => {
+      const boxes = $$('.steps input', s);
+      const c = $(`#toc a[href="#${s.id}"] .count`);
+      if (!boxes.length) { c.textContent = ''; return; }
+      const done = boxes.filter(b => b.checked).length;
+      c.textContent = `${done}/${boxes.length}`;
+      c.classList.toggle('done', done === boxes.length);
+    });
+  }
+  const saved = store.get('passos') || {};
+  $$('.steps input').forEach(box => {
+    box.checked = !!saved[box.id];
+    box.closest('li').classList.toggle('checked', box.checked);
+    box.addEventListener('change', () => {
+      saved[box.id] = box.checked; store.set('passos', saved);
+      box.closest('li').classList.toggle('checked', box.checked); refreshCounts();
+    });
+  });
+  refreshCounts();
+  const spy = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) $$('#toc a').forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + e.target.id)); });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  sections.forEach(s => spy.observe(s));
+
+  // ---------- busca: mostra só as seções que contêm o termo e destaca as ocorrências
+  const original = new Map(sections.map(s => [s, s.innerHTML]));
+  let lastTerm = '';
+  function clearMarks() { sections.forEach(s => { if (s.dataset.marked) { s.innerHTML = original.get(s); delete s.dataset.marked; } }); }
+  $('#busca').addEventListener('input', e => {
+    const term = e.target.value.trim().toLowerCase();
+    if (term === lastTerm) return;
+    lastTerm = term;
+    clearMarks(); rebind();
+    let any = false;
+    sections.forEach(s => {
+      const hit = !term || s.textContent.toLowerCase().includes(term);
+      s.hidden = !hit; any = any || hit;
+      if (term && hit && s.id !== 'revisar') mark(s, term);
+    });
+    $('#sem-resultado').hidden = any;
+  });
+  function mark(root, term) {
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, { acceptNode: n =>
+      n.parentElement.closest('script,style,svg,button,input') ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT });
+    const nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach(n => {
+      const i = n.nodeValue.toLowerCase().indexOf(term); if (i < 0) return;
+      const r = document.createRange(); r.setStart(n, i); r.setEnd(n, i + term.length);
+      const m = document.createElement('mark'); r.surroundContents(m);
+    });
+    root.dataset.marked = '1';
+  }
+  // depois de restaurar o HTML de uma seção, refaz as ligações dela
+  function rebind() {
+    $$('.steps input').forEach(box => {
+      if (box.dataset.bound) return; box.dataset.bound = '1';
+      box.checked = !!saved[box.id]; box.closest('li').classList.toggle('checked', box.checked);
+      box.addEventListener('change', () => { saved[box.id] = box.checked; store.set('passos', saved); box.closest('li').classList.toggle('checked', box.checked); refreshCounts(); });
+    });
+    bindRegions(); bindKeys();
+    if (document.documentElement.classList.contains('app'))
+      $$('.goto').forEach(b => { if (!b.dataset.bound) { b.dataset.bound = '1'; b.addEventListener('click', () => window.irPara(b.dataset.tela)); } });
+  }
+  $$('.steps input').forEach(b => b.dataset.bound = '1');
+
+  // ---------- mapa da janela
+  const REGIONS = {
+    telas: ['A · Barra de telas', 'As telas do programa. Início, Revisão, Auditoria, Resultados e Aplicar à esquerda; Ajuda e Configurações à direita. A tela aberta fica destacada.'],
+    ferramentas: ['B · Barra de ferramentas', 'Continuar revisão abre a próxima imagem pendente. Auditoria e Resultados são atalhos. A seta circular atualiza painéis e gráficos, o disquete faz um backup do banco na hora e o ponto de interrogação abre esta ajuda.'],
+    pilulas: ['C · Revisor e modelo', 'O nome de quem está revisando e o modelo ativo (U-Net v2). O nome se troca em Configurações.'],
+    lista: ['D · Painel da esquerda', 'Na Revisão, a lista de imagens por grupo; na Auditoria, o modelo e o resumo das respostas; na Aplicar, a pasta e o limiar.'],
+    paineis: ['E · Painel principal', 'A radiografia, os gráficos ou a tabela de cada tela. Arraste a divisória entre dois painéis para mudar o tamanho deles. Alguns painéis têm abas no cabeçalho, como Ambiente e Modelo no Início.'],
+    status: ['F · Barra de status', 'Quantas imagens da amostra aleatória já foram revisadas, o total revisado e a hora da última gravação. À direita, a pasta do banco de dados e a versão do programa.']
+  };
+  function showRegion(k) {
+    $$('.region').forEach(r => r.classList.toggle('on', r.dataset.k === k));
+    const [t, d] = REGIONS[k]; $('#explica').innerHTML = `<b>${t}.</b> ${d}`;
+    store.set('regiao', k);
+  }
+  function bindRegions() { $$('.region').forEach(r => { if (r.dataset.bound) return; r.dataset.bound = '1'; r.addEventListener('click', () => showRegion(r.dataset.k)); }); }
+  bindRegions(); showRegion(store.get('regiao') || 'telas');
+
+  // ---------- simulador da revisão
+  const COR = { pend: 'var(--film-ink)', confirmada: 'var(--ok)', rejeitada: 'var(--no)', duvida: 'var(--doubt)' };
+  const IMAGENS = [
+    { id: 'T001', dets: [{ cx: 205, cy: 252, rx: 22, ry: 18, conf: '0,98' }, { cx: 560, cy: 268, rx: 26, ry: 21, conf: '1,00' }, { cx: 470, cy: 120, rx: 15, ry: 13, conf: '0,61' }] },
+    { id: 'T002', dets: [{ cx: 300, cy: 262, rx: 24, ry: 19, conf: '0,93' }, { cx: 640, cy: 128, rx: 18, ry: 15, conf: '0,55' }] }
+  ];
+  let img = 0, sel = 0, dec = {}, cego = false, desenhando = false, traco = null, adicionadas = [];
+  const NS = 'http://www.w3.org/2000/svg';
+  function dentes() {
+    const g = $('#dentes'); g.innerHTML = '';
+    for (let i = 0; i < 14; i++) {
+      const x = 120 + i * 40, t = (i - 6.5) / 6.5, arc = 24 * t * t;
+      const sup = document.createElementNS(NS, 'g');
+      sup.innerHTML = `<rect x="${x}" y="${150 + arc}" width="30" height="42" rx="9" fill="url(#dente)"/><path d="M${x + 6} ${150 + arc} L${x + 10} ${84 + arc} L${x + 15} ${150 + arc}Z M${x + 16} ${150 + arc} L${x + 21} ${88 + arc} L${x + 25} ${150 + arc}Z" fill="url(#raiz)" opacity=".8"/>
+        <rect x="${x}" y="${200 - arc}" width="30" height="40" rx="9" fill="url(#dente)"/><path d="M${x + 7} ${238 - arc} L${x + 12} ${300 - arc} L${x + 16} ${238 - arc}Z M${x + 15} ${238 - arc} L${x + 20} ${296 - arc} L${x + 24} ${238 - arc}Z" fill="url(#raiz)" opacity=".8"/>`;
+      g.appendChild(sup);
+    }
+  }
+  function desenhar() {
+    const g = $('#marcas'); g.innerHTML = '';
+    const im = IMAGENS[img];
+    if (!cego) im.dets.forEach((d, i) => {
+      const c = COR[dec[i]] || COR.pend;
+      const e = document.createElementNS(NS, 'ellipse');
+      Object.entries({ cx: d.cx, cy: d.cy, rx: d.rx, ry: d.ry, fill: 'transparent', stroke: c, 'stroke-width': i === sel ? 4.5 : 2.2,
+        'stroke-dasharray': dec[i] === 'rejeitada' ? '7 6' : '' }).forEach(([k, v]) => e.setAttribute(k, v));
+      e.style.cursor = 'pointer'; e.addEventListener('pointerdown', ev => { if (desenhando) return; ev.stopPropagation(); sel = i; atualizar(); });
+      const t = document.createElementNS(NS, 'text');
+      Object.entries({ x: d.cx + d.rx + 4, y: d.cy - d.ry - 2, fill: c, 'font-family': 'Archivo, sans-serif', 'font-weight': 700, 'font-size': 18 }).forEach(([k, v]) => t.setAttribute(k, v));
+      t.textContent = i + 1; g.append(e, t);
+    });
+    if (!cego) adicionadas.forEach(p => {
+      const pl = document.createElementNS(NS, 'polygon'); pl.setAttribute('points', p.map(q => q.join(',')).join(' '));
+      pl.setAttribute('fill', 'color-mix(in srgb, var(--add) 22%, transparent)'); pl.setAttribute('stroke', 'var(--add)'); pl.setAttribute('stroke-width', 2.2); g.appendChild(pl);
+    });
+  }
+  function cartoes() {
+    const im = IMAGENS[img];
+    $('#sim-titulo').textContent = `${im.id} · ${im.dets.length} detecção(ões)`;
+    $('#cartoes').innerHTML = im.dets.map((d, i) => `<div class="card ${i === sel ? 'sel' : ''}" data-i="${i}"><div class="row"><b>Lesão ${i + 1}</b><span>confiança ${d.conf}</span></div>
+      <div class="choices"><button class="choice ok ${dec[i] === 'confirmada' ? 'on' : ''}" data-d="confirmada" type="button">✓ Confirma</button><button class="choice no ${dec[i] === 'rejeitada' ? 'on' : ''}" data-d="rejeitada" type="button">✗ Rejeita</button><button class="choice doubt ${dec[i] === 'duvida' ? 'on' : ''}" data-d="duvida" type="button">? Dúvida</button></div></div>`).join('');
+    $('#adicionadas').innerHTML = adicionadas.length ? adicionadas.map((_, i) => `<div class="added"><span>● Adicionada ${i + 1}</span><button data-del="${i}" type="button">remover</button></div>`).join('')
+      : '<p class="muted" style="font-size:.85rem">Nenhuma. Aperte M e desenhe sobre a imagem.</p>';
+  }
+  function atualizar() { desenhar(); cartoes(); }
+  function salvo(msg) { $('#sim-hora').textContent = new Date().toLocaleTimeString('pt-BR'); $('#sim-log').innerHTML = msg; }
+  function decidir(d) {
+    dec[sel] = dec[sel] === d ? undefined : d; atualizar();
+    const nomes = { confirmada: 'confirmada', rejeitada: 'rejeitada', duvida: 'marcada como dúvida' };
+    salvo(dec[sel] ? `Lesão ${sel + 1} <b>${nomes[d]}</b>. Gravado.` : `Decisão da lesão ${sel + 1} desfeita.`);
+  }
+  function setCego(v) { cego = v; $('#bt-cego').textContent = cego ? 'Mostrar marcações' : 'Ocultar marcações'; desenhar(); }
+  function setDesenho(v) {
+    desenhando = v; $('#film').classList.toggle('drawing', v); $('#bt-marcar').classList.toggle('on', v);
+    $('#sim-dica').textContent = v ? 'Desenhe o contorno segurando o botão do mouse · Esc cancela' : 'Clique num contorno ou use Tab · H oculta · M desenha';
+  }
+  function concluir() {
+    const falta = IMAGENS[img].dets.length - Object.values(dec).filter(Boolean).length;
+    if (falta > 0 && !$('#sim-log').dataset.avisou) {
+      $('#sim-log').dataset.avisou = '1';
+      $('#sim-log').innerHTML = `No programa aparece: <b>${falta} detecção(ões) ainda não têm decisão. Concluir mesmo assim?</b> Aperte Enter de novo para concluir.`;
+      return;
+    }
+    delete $('#sim-log').dataset.avisou;
+    img = (img + 1) % IMAGENS.length; sel = 0; dec = {}; adicionadas = []; setCego(false); setDesenho(false); atualizar();
+    salvo(`Imagem concluída. Abrindo <b>${IMAGENS[img].id}</b>, a próxima pendente.`);
+  }
+  // teclado do simulador, com destaque no mapa de atalhos
+  function acende(k) { const el = $(`.key[data-key="${k}"]`); if (!el) return; el.classList.add('lit'); setTimeout(() => el.classList.remove('lit'), 450); }
+  const film = $('#film');
+  film.addEventListener('focus', () => film.classList.add('focused'));
+  film.addEventListener('blur', () => film.classList.remove('focused'));
+  film.addEventListener('keydown', ev => {
+    const n = IMAGENS[img].dets.length, k = ev.key;
+    if (k === '1') { decidir('confirmada'); acende('1'); }
+    else if (k === '2') { decidir('rejeitada'); acende('2'); }
+    else if (k === '3') { decidir('duvida'); acende('3'); }
+    else if (k === 'Tab') { ev.preventDefault(); sel = (sel + (ev.shiftKey ? n - 1 : 1)) % n; atualizar(); acende('Tab'); }
+    else if (k === 'h' || k === 'H') { setCego(!cego); acende('h'); }
+    else if (k === 'm' || k === 'M') { setDesenho(!desenhando); acende('m'); }
+    else if (k === 'Escape') { traco = null; $('#desenho').innerHTML = ''; setDesenho(false); acende('m'); }
+    else if (k === 'Enter') { ev.preventDefault(); concluir(); acende('Enter'); }
+    else if (k === '0') { acende('0'); salvo('No programa, 0 ajusta a radiografia à tela.'); }
+    else if (k === 'ArrowLeft' || k === 'ArrowRight') { ev.preventDefault(); acende('Arrow'); salvo('No programa, as setas abrem a imagem anterior ou a próxima.'); }
+  });
+  $('#cartoes').addEventListener('click', e => {
+    const card = e.target.closest('.card'); if (!card) return;
+    sel = +card.dataset.i; const b = e.target.closest('button');
+    if (b) decidir(b.dataset.d); else atualizar();
+    film.focus({ preventScroll: true });
+  });
+  $('#adicionadas').addEventListener('click', e => {
+    const b = e.target.closest('[data-del]'); if (!b) return;
+    adicionadas.splice(+b.dataset.del, 1); atualizar(); salvo('Lesão adicionada removida.');
+  });
+  $('#bt-cego').addEventListener('click', () => { setCego(!cego); film.focus({ preventScroll: true }); });
+  $('#bt-marcar').addEventListener('click', () => { setDesenho(!desenhando); film.focus({ preventScroll: true }); });
+  $('#bt-concluir').addEventListener('click', concluir);
+  // desenho à mão livre sobre a panorâmica
+  const svg = $('#pano');
+  const ponto = ev => { const p = svg.createSVGPoint(); p.x = ev.clientX; p.y = ev.clientY; const q = p.matrixTransform(svg.getScreenCTM().inverse()); return [Math.round(q.x), Math.round(q.y)]; };
+  svg.addEventListener('pointerdown', ev => { film.focus({ preventScroll: true }); if (!desenhando) return; traco = [ponto(ev)]; svg.setPointerCapture(ev.pointerId); });
+  svg.addEventListener('pointermove', ev => {
+    if (!traco) return; traco.push(ponto(ev));
+    $('#desenho').innerHTML = `<polyline points="${traco.map(q => q.join(',')).join(' ')}" fill="none" stroke="var(--add)" stroke-width="2.5"/>`;
+  });
+  svg.addEventListener('pointerup', () => {
+    if (!traco) return;
+    if (traco.length >= 5) { adicionadas.push(traco); salvo(`Lesão adicionada ${adicionadas.length}. Gravado. Este é o exemplo que mais ensina o programa.`); }
+    traco = null; $('#desenho').innerHTML = ''; setDesenho(false); atualizar();
+  });
+  // clicar num atalho mostra o efeito no simulador
+  function bindKeys() {
+    $$('.key').forEach(el => { if (el.dataset.bound) return; el.dataset.bound = '1'; el.addEventListener('click', () => {
+      const k = el.dataset.key;
+      film.focus({ preventScroll: true });
+      const ev = new KeyboardEvent('keydown', { key: k === 'Arrow' ? 'ArrowRight' : k, bubbles: true });
+      film.dispatchEvent(ev);
+    }); });
+  }
+  bindKeys();
+  dentes(); atualizar();
+})();
+</script>

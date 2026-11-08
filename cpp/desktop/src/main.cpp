@@ -5,6 +5,12 @@
 #include "Pane.h"
 
 #include <QApplication>
+#include <QLibraryInfo>
+#include <QTranslator>
+
+#ifdef Q_OS_WIN
+#include <windows.h>
+#endif
 #include <QLockFile>
 #include <QMessageBox>
 #include <QDir>
@@ -16,6 +22,14 @@ int main(int argc, char** argv) {
     QApplication::setOrganizationName("LEMAG-UnB");
     app.setStyle("Fusion");
     app.setStyleSheet(odonto::styleSheet());
+    // botões e caixas padrão do Qt em português (traduções copiadas pelo windeployqt)
+    QTranslator qtPortuguese;
+    if (qtPortuguese.load(QLocale(QLocale::Portuguese, QLocale::Brazil), "qt", "_",
+                          QApplication::applicationDirPath() + "/translations") ||
+        qtPortuguese.load(QLocale(QLocale::Portuguese, QLocale::Brazil), "qt", "_",
+                          QLibraryInfo::path(QLibraryInfo::TranslationsPath))) {
+        QApplication::installTranslator(&qtPortuguese);
+    }
 
     odonto::Context ctx;
     // pasta dos dados: a mesma do app R; pode ser trocada com --dados <pasta> (testes)
@@ -28,6 +42,14 @@ int main(int argc, char** argv) {
     QDir().mkpath(dataDir);
     QLockFile lock(QDir(dataDir).filePath("ml_odonto_nativo.lock"));
     if (!lock.tryLock(100)) {
+#ifdef Q_OS_WIN
+        // já está aberto: traz a janela existente para a frente
+        if (HWND existing = FindWindowW(nullptr, L"ML ODONTO")) {
+            ShowWindow(existing, IsIconic(existing) ? SW_RESTORE : SW_SHOW);
+            SetForegroundWindow(existing);
+            return 0;
+        }
+#endif
         QMessageBox::information(nullptr, "ML ODONTO", "O ML ODONTO já está aberto.");
         return 0;
     }

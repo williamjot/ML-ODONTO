@@ -51,7 +51,9 @@ class RevisaoPage : public QWidget {
     Q_OBJECT
 public:
     explicit RevisaoPage(Context& ctx, QWidget* parent = nullptr);
+    ~RevisaoPage() override;
 private:
+    void flushObservations();
     void reloadList();
     void open(const QString& imageId);
     void navigate(int step);
@@ -149,6 +151,13 @@ class AjudaPage : public QWidget {
     Q_OBJECT
 public:
     explicit AjudaPage(Context& ctx, QWidget* parent = nullptr);
+protected:
+    void showEvent(QShowEvent* event) override;  // o WebView2 só nasce quando a tela é aberta
+private:
+    Context& ctx_;
+    QString page_;
+    QWidget* body_{nullptr};
+    bool started_{false};
 };
 
 class ConfigPage : public QWidget {
