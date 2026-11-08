@@ -59,8 +59,8 @@ public:
     std::atomic<bool> cancelled{false};
 
 signals:
-    void started(int index);
-    void finished(int index, const QVector<NewDetection>& lesions, int width, int height, double seconds);
+    void imageStarted(int index);
+    void imageDone(int index, const QVector<NewDetection>& lesions, int width, int height, double seconds);
     void failed(int index, const QString& message);
     void fatal(const QString& message);
 
@@ -77,7 +77,7 @@ protected:
         options.model_width = static_cast<std::size_t>(modelWidth);
         options.threshold = threshold;
         for (int i = 0; i < files.size() && !cancelled; ++i) {
-            emit started(i);
+            emit imageStarted(i);
             QElapsedTimer timer;
             timer.start();
             try {
@@ -97,7 +97,7 @@ protected:
                 for (const auto& l : lesionsFromMask(result.mask, result.detections, threshold, factor)) {
                     lesions.push_back({l.index, l.contour, l.center, l.area, l.confidence});
                 }
-                emit finished(i, lesions, image.width(), image.height(), timer.elapsed() / 1000.0);
+                emit imageDone(i, lesions, image.width(), image.height(), timer.elapsed() / 1000.0);
             } catch (const std::exception& e) {
                 emit failed(i, e.what());
             }
@@ -338,7 +338,7 @@ void AplicarPage::start() {
     QElapsedTimer* clock = new QElapsedTimer;
     clock->start();
 
-    connect(worker_, &Worker::started, this, [this, pending, done, total, clock](int i) {
+    connect(worker_, &Worker::imageStarted, this, [this, pending, done, total, clock](int i) {
         QString eta;
         const int processed = *done;
         if (i > 0) {
@@ -348,7 +348,7 @@ void AplicarPage::start() {
         status_->setText(QStringLiteral("<b>%1 de %2</b> · processando · %3%4").arg(processed).arg(total)
                              .arg(QFileInfo(pending[i]).fileName(), eta));
     });
-    connect(worker_, &Worker::finished, this,
+    connect(worker_, &Worker::imageDone, this,
             [this, pending, existing, threshold, done](int i, const QVector<NewDetection>& lesions, int w, int h, double seconds) {
                 ctx_.db.saveApplication(existing[i], pending[i], w, h, ctx_.modelId(), lesions, threshold, seconds);
                 progress_->setValue(++*done);

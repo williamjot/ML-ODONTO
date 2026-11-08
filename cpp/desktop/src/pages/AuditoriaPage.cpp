@@ -325,6 +325,8 @@ void AuditoriaPage::rebuildCards() {
         delete item->widget();
         delete item;
     }
+    // gerar as imagens dos cartões pela primeira vez leva alguns segundos
+    QApplication::setOverrideCursor(Qt::WaitCursor);
     const bool onlyPending = filter_->checkedId() == 1;
     const QString cache = QDir(ctx_.db.dataDir()).filePath("cache");
     int k = 0;
@@ -411,6 +413,7 @@ void AuditoriaPage::rebuildCards() {
         cardsLayout_->addWidget(empty);
     }
     cardsLayout_->addStretch(1);
+    QApplication::restoreOverrideCursor();
 }
 
 }  // namespace odonto

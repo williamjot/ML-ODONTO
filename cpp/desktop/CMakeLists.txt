@@ -5,15 +5,27 @@ qt_standard_project_setup()
 
 set(APP_R "${CMAKE_CURRENT_SOURCE_DIR}/../../software/odontolesao/inst")
 
+# Lógica sem interface (banco, métricas, contornos): usada pelo programa e pelos testes
+qt_add_library(ml_odonto_logic STATIC
+    src/Database.cpp
+    src/Metrics.cpp
+    src/Contours.cpp
+)
+target_include_directories(ml_odonto_logic PUBLIC src)
+target_link_libraries(ml_odonto_logic PUBLIC ml_odonto::core Qt6::Core Qt6::Gui Qt6::Sql)
+# Esquema do banco e registro dos modelos: os mesmos arquivos do pacote R (fonte única)
+file(GLOB SQL_FILES "${APP_R}/sql/*.sql")
+qt_add_resources(ml_odonto_logic "esquema"
+    PREFIX "/"
+    BASE "${APP_R}"
+    FILES ${SQL_FILES} "${APP_R}/modelos/modelos.yml")
+
 qt_add_executable(ml-odonto-desktop WIN32
     src/main.cpp
     src/Context.h
     src/Icons.h
     src/pages/Pages.h
-    src/Database.cpp
-    src/Metrics.cpp
     src/Charts.cpp
-    src/Contours.cpp
     src/Pane.cpp
     src/ImageViewer.cpp
     src/MainWindow.cpp
@@ -41,7 +53,7 @@ if(MINGW)
 else()
     target_sources(ml-odonto-desktop PRIVATE ../app/ml_odonto.rc)
 endif()
-target_link_libraries(ml-odonto-desktop PRIVATE ml_odonto::core Qt6::Core Qt6::Gui Qt6::Widgets Qt6::Sql)
+target_link_libraries(ml-odonto-desktop PRIVATE ml_odonto_logic Qt6::Widgets)
 
 # Manual interativo num WebView2 embutido (biblioteca webview + SDK do WebView2; o build_desktop.py baixa)
 if(WIN32 AND WEBVIEW_INCLUDE AND WEBVIEW2_INCLUDE)
@@ -53,14 +65,21 @@ if(WIN32 AND WEBVIEW_INCLUDE AND WEBVIEW2_INCLUDE)
     target_link_libraries(ml-odonto-desktop PRIVATE advapi32 ole32 shell32 shlwapi user32 version)
 endif()
 
-# Esquema do banco e manual: os mesmos arquivos do pacote R (fonte única)
-file(GLOB SQL_FILES "${APP_R}/sql/*.sql")
-qt_add_resources(ml-odonto-desktop "app_r"
+# Manual: o mesmo do pacote R
+qt_add_resources(ml-odonto-desktop "manual"
     PREFIX "/"
     BASE "${APP_R}"
-    FILES ${SQL_FILES} "${APP_R}/manuais/manual_dentista.md" "${APP_R}/manuais/manual_dentista.html" "${APP_R}/extdata/amostra_aleatoria.txt"
-          "${APP_R}/modelos/modelos.yml")
+    FILES "${APP_R}/manuais/manual_dentista.md" "${APP_R}/manuais/manual_dentista.html")
 qt_add_resources(ml-odonto-desktop "icone"
     PREFIX "/"
     BASE "${CMAKE_CURRENT_SOURCE_DIR}/../app"
     FILES "${CMAKE_CURRENT_SOURCE_DIR}/../app/ml_odonto.ico")
+
+if(ML_ODONTO_BUILD_TESTS)
+    qt_add_executable(ml_odonto_desktop_tests tests/desktop_tests.cpp)
+    target_link_libraries(ml_odonto_desktop_tests PRIVATE ml_odonto_logic)
+    add_test(NAME ml_odonto_desktop_tests COMMAND ml_odonto_desktop_tests)
+    # o Qt (DLLs e o driver SQLite) vem da instalação usada na compilação
+    set_tests_properties(ml_odonto_desktop_tests PROPERTIES
+        ENVIRONMENT_MODIFICATION "PATH=path_list_prepend:$<TARGET_FILE_DIR:Qt6::Core>")
+endif()

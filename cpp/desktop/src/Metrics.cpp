@@ -28,7 +28,7 @@ Proportion wilson(int x, int n, double z) {
 }
 
 QString percent(double value) {
-    return QLocale(QLocale::Portuguese, QLocale::Brazil).toString(std::round(100 * value), 'f', 0) + "%";
+    return QLocale(QLocale::Portuguese, QLocale::Brazil).toString(std::nearbyint(100 * value), 'f', 0) + "%";
 }
 
 QString decimal(double value, int digits) {

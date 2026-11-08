@@ -41,7 +41,7 @@ Pane* chartPane(const QString& title, ChartWidget* chart, const QString& name, i
 
 QString interval(const Proportion& p) {
     if (!p.valid()) return QStringLiteral("—");
-    return QStringLiteral("%1 (%2–%3)").arg(percent(p.p)).arg(qRound(100 * p.lower)).arg(qRound(100 * p.upper));
+    return QStringLiteral("%1 (%2–%3)").arg(percent(p.p)).arg(std::nearbyint(100 * p.lower)).arg(std::nearbyint(100 * p.upper));  // metade para o par, como o R
 }
 
 }  // namespace

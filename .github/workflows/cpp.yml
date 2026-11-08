@@ -1,13 +1,19 @@
-name: C++ core
+name: C++ (núcleo e programa nativo)
 
 on:
   push:
     paths:
       - "cpp/**"
+      - "software/odontolesao/inst/sql/**"
+      - "software/odontolesao/inst/manuais/**"
+      - "software/odontolesao/inst/modelos/modelos.yml"
       - ".github/workflows/cpp.yml"
   pull_request:
     paths:
       - "cpp/**"
+      - "software/odontolesao/inst/sql/**"
+      - "software/odontolesao/inst/manuais/**"
+      - "software/odontolesao/inst/modelos/modelos.yml"
       - ".github/workflows/cpp.yml"
 
 jobs:
@@ -40,3 +46,16 @@ jobs:
         run: python -m pip install ninja
       - name: Build with ONNX Runtime
         run: python cpp/tools/build.py --system-compiler --no-install
+
+  # Programa nativo (Qt 6 + MinGW pelo aqtinstall): compila e roda os testes do núcleo e do programa
+  desktop:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Ferramentas
+        run: python -m pip install aqtinstall ninja
+      - name: Compilar e testar
+        run: python cpp/tools/build_desktop.py --testes

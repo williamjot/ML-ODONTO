@@ -56,7 +56,6 @@ bool Database::open(const QString& dataDir, QString* error) {
     for (const auto* sub : {"", "cache", "backups", "relatorios", "logs"}) {
         QDir().mkpath(QDir(dataDir_).filePath(sub));
     }
-    dailyBackup();
     auto db = QSqlDatabase::addDatabase("QSQLITE", connection_);
     db.setDatabaseName(file());
     if (!db.open()) {
@@ -72,6 +71,7 @@ bool Database::open(const QString& dataDir, QString* error) {
         return false;
     }
     seedModels();
+    dailyBackup();
     return true;
 }
 
@@ -695,29 +695,36 @@ QString Database::detectionsCsv(int modelId) const {
     return csv;
 }
 
+namespace {
+// Cópia consistente do banco aberto. Copiar o arquivo .sqlite não basta: no modo WAL as gravações recentes
+// ficam no arquivo -wal, e a cópia sairia vazia ou desatualizada.
+bool vacuumInto(const QSqlDatabase& db, const QString& target) {
+    QFile::remove(target);
+    QString escaped = QDir::toNativeSeparators(target);
+    escaped.replace("'", "''");
+    QSqlQuery query(db);
+    return query.exec("VACUUM INTO '" + escaped + "'");
+}
+}  // namespace
+
+// Uma cópia por dia (odontolesao_AAAA-MM-DD.sqlite), as 7 mais recentes; as cópias feitas à mão ficam
 void Database::dailyBackup() const {
-    const QString database = file();
-    if (!QFileInfo::exists(database)) {
-        return;
-    }
     const QDir folder(QDir(dataDir_).filePath("backups"));
     const QString target = folder.filePath("odontolesao_" + QDate::currentDate().toString("yyyy-MM-dd") + ".sqlite");
-    if (!QFileInfo::exists(target)) {
-        QFile::copy(database, target);
+    // refaz a de hoje se ela tiver saído vazia (cópias de versões anteriores, feitas sem o WAL)
+    if (!QFileInfo::exists(target) || QFileInfo(target).size() < 16 * 1024) {
+        vacuumInto(db(), target);
     }
-    auto old = folder.entryList({"odontolesao_*.sqlite"}, QDir::Files, QDir::Name | QDir::Reversed);
-    for (int i = 7; i < old.size(); ++i) {
-        QFile::remove(folder.filePath(old[i]));
+    auto daily = folder.entryList({"odontolesao_\?\?\?\?-\?\?-\?\?.sqlite"}, QDir::Files, QDir::Name | QDir::Reversed);
+    for (int i = 7; i < daily.size(); ++i) {
+        QFile::remove(folder.filePath(daily[i]));
     }
 }
 
 QString Database::backupNow() const {
     const QString target = QDir(QDir(dataDir_).filePath("backups"))
                                .filePath("odontolesao_" + QDateTime::currentDateTime().toString("yyyy-MM-dd_HHmmss") + ".sqlite");
-    QSqlQuery query(db());
-    QString escaped = QDir::toNativeSeparators(target);
-    escaped.replace("'", "''");
-    return query.exec("VACUUM INTO '" + escaped + "'") ? target : QString();
+    return vacuumInto(db(), target) ? target : QString();
 }
 
 }  // namespace odonto

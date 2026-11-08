@@ -10,6 +10,7 @@ abrir_banco <- function(caminho) {
   con <- DBI::dbConnect(RSQLite::SQLite(), caminho)
   DBI::dbExecute(con, "PRAGMA foreign_keys = ON")
   DBI::dbExecute(con, "PRAGMA journal_mode = WAL")
+  DBI::dbExecute(con, "PRAGMA busy_timeout = 5000")   # o programa nativo pode estar gravando ao mesmo tempo
   migrar(con)
   con
 }

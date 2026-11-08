@@ -97,7 +97,8 @@ qualquer Windows 10/11; os dados ficam em `Documentos\OdontoLesao`.
 A rede roda com o ONNX Runtime: o pré-processamento (redução por área e CLAHE), a U-Net com espelhamento
 e a detecção reproduzem o pipeline Python **lesão a lesão** nas 20 panorâmicas marcadas (31/45, 0 falso
 positivo, correlação ≥ 0,998, Dice ≥ 0,988), a ~11 s por radiografia num PC de 8 GB. Detalhes em
-[`docs/EQUIVALENCIA_CPP.md`](docs/EQUIVALENCIA_CPP.md) e [`docs/MIGRACAO_CPP.md`](docs/MIGRACAO_CPP.md).
+[`docs/EQUIVALENCIA_CPP.md`](docs/EQUIVALENCIA_CPP.md) e [`docs/MIGRACAO_CPP.md`](docs/MIGRACAO_CPP.md). A auditoria
+feita antes da entrega à equipe está em [`docs/AUDITORIA.md`](docs/AUDITORIA.md).
 
 ### Versão em R (referência)
 
@@ -113,7 +114,6 @@ ML-ODONTO/
 ├── README.md                     este arquivo
 ├── LICENSE                       uso acadêmico e não comercial
 ├── ML ODONTO/                    o programa pronto (montado por cpp/tools/build_desktop.py, fora do git)
-├── Revisar_lesoes.bat           ferramenta de revisão antiga (Python), substituída pelo ML ODONTO
 │
 ├── software/                     ── versão em R do programa (referência)
 │   ├── instalar_dependencias.R   instala pacotes, libtorch e o programa
@@ -213,19 +213,15 @@ garantindo que o treino na nuvem use exatamente o mesmo código. Conjuntos exter
 
 ## Testes e reprodutibilidade
 
-```bash
-# testes unitários do pacote (35 testes)
-Rscript -e "testthat::test_local('software/odontolesao')"
+| Teste | Comando | O que confere |
+|---|---|---|
+| Programa nativo e núcleo C++ | `python cpp/tools/build_desktop.py --testes` | banco, migrações, revisão, estatísticas, kappa, backup, aplicação, contornos; os cenários repetem os testes do R |
+| Pacote R (39 verificações) | `Rscript -e "testthat::test_local('software/odontolesao')"` | as mesmas funções na versão em R, incluindo o backup |
+| Motor C++ × referência (~5 min) | `python cpp/tools/validate_pipeline.py --cli cpp/build/zig-onnx/ml-odonto-cli.exe` | as 31/45 lesões das 20 panorâmicas, uma a uma |
+| R × Python (~10 min) | `Rscript software/odontolesao/tests/equivalencia.R` | idem, para a versão em R |
 
-# equivalência R × Python nas 20 panorâmicas marcadas (~10 min; exige os dados locais)
-Rscript software/odontolesao/tests/equivalencia.R
-
-# equivalência do motor C++ nas mesmas 20 panorâmicas (~5 min; exige os dados locais)
-python cpp/tools/validate_pipeline.py --cli cpp/build/zig-onnx/ml-odonto-cli.exe
-```
-
-Os testes unitários do C++ rodam a cada `python cpp/tools/build.py` e na integração contínua do GitHub
-(Linux e Windows).
+Os dois últimos usam radiografias de pacientes e rodam só no computador do projeto. Os testes C++ rodam
+também na integração contínua do GitHub, a cada mudança em `cpp/` (Linux e Windows, com o programa nativo).
 
 ## Dados, privacidade e ética
 

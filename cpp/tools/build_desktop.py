@@ -11,6 +11,7 @@ as bibliotecas e o modelo: copie a pasta para qualquer Windows 10/11 e abra `ML 
 from __future__ import annotations
 
 import argparse
+import os
 import shutil
 import subprocess
 import sys
@@ -49,6 +50,8 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--onnxruntime", default="1.31.1")
     parser.add_argument("--output", type=Path, default=ROOT / "ML ODONTO")
+    parser.add_argument("--testes", action="store_true",
+                        help="só compila e roda os testes (sem montar a pasta; não precisa dos pesos)")
     args = parser.parse_args()
 
     root = qt()
@@ -65,6 +68,10 @@ def main() -> None:
             "-DML_ODONTO_WITH_ONNX=ON", f"-DONNXRUNTIME_ROOT={ort.as_posix()}",
             f"-DWEBVIEW_INCLUDE={webview_include.as_posix()}", f"-DWEBVIEW2_INCLUDE={webview2_include.as_posix()}")
     run("cmake", "--build", build)
+    env = {**os.environ, "PATH": f"{prefix / 'bin'};{gcc};{os.environ.get('PATH', '')}"}
+    subprocess.run(["ctest", "--test-dir", str(build), "--output-on-failure"], check=True, env=env)
+    if args.testes:
+        return
 
     # pasta distribuível
     out = args.output
@@ -74,10 +81,8 @@ def main() -> None:
     shutil.copy2(build / "desktop" / "ML ODONTO.exe", out)
     for dll in (ort / "lib").glob("*.dll"):
         shutil.copy2(dll, out)
-    env_path = f"{gcc};{prefix / 'bin'}"
     subprocess.run([str(prefix / "bin" / "windeployqt.exe"), "--release", "--compiler-runtime", "--translations", "pt_BR",
-                    "--no-system-d3d-compiler", "--no-opengl-sw", str(out / "ML ODONTO.exe")],
-                   check=True, env={**__import__("os").environ, "PATH": env_path})
+                    "--no-system-d3d-compiler", "--no-opengl-sw", str(out / "ML ODONTO.exe")], check=True, env=env)
     model = ROOT / "software" / "odontolesao" / "inst" / "modelos" / "unet_lesoes_v2.onnx"
     if not model.is_file():
         run(sys.executable, CPP / "tools" / "export_onnx.py", model.with_suffix(".safetensors"), model, "--verify")
