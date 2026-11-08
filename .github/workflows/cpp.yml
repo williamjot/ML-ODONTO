@@ -1,6 +1,7 @@
 name: C++ (núcleo e programa nativo)
 
 on:
+  workflow_dispatch:   # botão "Run workflow" na aba Actions
   push:
     paths:
       - "cpp/**"
