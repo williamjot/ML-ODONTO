@@ -41,18 +41,24 @@ O programa **apoia a leitura e não substitui o diagnóstico**. Todas as radiogr
 
 **Requisitos:** Windows 10 ou 11 (64 bits) e 8 GB de memória. Não é preciso instalar R, Python nem nada além.
 
-1. **Receba a pasta `ML ODONTO`** (cerca de 150 MB, com o programa e o modelo) do responsável pelo projeto e
-   copie-a para o computador, por exemplo em `C:\ML ODONTO`. Ela não fica no repositório: é montada a partir
-   do código e dos pesos do modelo, como descrito [mais abaixo](#montar-o-programa).
-2. **Dê dois cliques em `ML ODONTO.exe`.** Na primeira vez, o Windows pode mostrar *“O Windows protegeu o
+1. **Baixe o programa:** [**ML_ODONTO_Windows.zip**](https://github.com/williamjot/ML-ODONTO/releases/latest/download/ML_ODONTO_Windows.zip)
+   (cerca de 115 MB, com o programa e o modelo). As versões anteriores e as notas de cada uma ficam em
+   [Releases](https://github.com/williamjot/ML-ODONTO/releases).
+2. **Extraia o arquivo:** clique com o botão direito no zip › *Extrair tudo…* e escolha, por exemplo, `C:\`.
+   Fica uma pasta `ML ODONTO`. Não rode o programa de dentro do zip.
+3. **Dê dois cliques em `ML ODONTO.exe`**, dentro da pasta. Na primeira vez, o Windows pode mostrar *“O Windows protegeu o
    computador”*, porque o programa não tem assinatura digital comercial: clique em **Mais informações** ›
    **Executar assim mesmo**. Para ter um atalho, clique com o botão direito no arquivo › *Enviar para* ›
    *Área de trabalho*.
-3. **Escreva o seu nome** quando o programa pedir. Cada revisor tem as próprias respostas.
-4. **Abra a tela Ajuda.** O [manual do dentista](docs/MANUAL_DENTISTA.md) está lá em versão interativa, com
+4. **Escreva o seu nome** quando o programa pedir. Cada revisor tem as próprias respostas.
+5. **Abra a tela Ajuda.** O [manual do dentista](docs/MANUAL_DENTISTA.md) está lá em versão interativa, com
    um simulador da revisão para treinar as teclas antes de começar. Em resumo: comece pelas 60 imagens da
    *amostra aleatória*, olhe primeiro sem as marcações (**H**), decida cada detecção (**1** confirma, **2**
    rejeita, **3** dúvida) e desenhe com **M** as lesões que o programa não marcou.
+
+**Atualizar para uma versão nova:** feche o programa, baixe o zip de novo pelo mesmo link e extraia por cima da
+pasta antiga (ou apague-a antes). As revisões não são afetadas: elas ficam em `Documentos\OdontoLesao`, fora
+da pasta do programa.
 
 ### Onde ficam os dados, e o que isso implica
 
@@ -169,8 +175,22 @@ python cpp/tools/build_desktop.py
 
 Na primeira vez, o script baixa para `cpp/.deps` o Qt 6.8 com MinGW, o ONNX Runtime e os cabeçalhos do
 WebView2 (cerca de 2 GB), compila, roda os testes, exporta o modelo para ONNX e monta a pasta **`ML ODONTO/`** na raiz.
-É essa pasta que se entrega à equipe. Opções do programa, úteis para testes: `--dados <pasta>`,
+Opções do programa, úteis para testes: `--dados <pasta>`,
 `--tela <nome>` e `--aplicar <pasta>` ([`cpp/README.md`](cpp/README.md)).
+
+### Publicar uma versão para a equipe
+
+A equipe baixa o programa pela [Release](https://github.com/williamjot/ML-ODONTO/releases) mais recente, sempre
+pelo arquivo `ML_ODONTO_Windows.zip` (o nome fixo mantém o link do README válido). Para publicar uma versão:
+
+```bash
+python cpp/tools/build_desktop.py
+python cpp/tools/empacotar.py
+gh release create v0.3.1 cpp/build/release/ML_ODONTO_Windows.zip --title "ML ODONTO 0.3.1" --notes "O que mudou"
+```
+
+Antes, atualize a versão em `cpp/desktop/src/main.cpp` e `cpp/app/ml_odonto.rc`. O `empacotar.py` gera o zip
+com a pasta `ML ODONTO/` e confere a integridade dele.
 
 ### Testes
 

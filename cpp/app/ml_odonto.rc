@@ -5,8 +5,8 @@ IDI_APP ICON "ml_odonto.ico"
 1 24 "ml_odonto.manifest"
 
 VS_VERSION_INFO VERSIONINFO
-FILEVERSION 0,2,0,0
-PRODUCTVERSION 0,2,0,0
+FILEVERSION 0,3,0,0
+PRODUCTVERSION 0,3,0,0
 FILEOS VOS_NT_WINDOWS32
 FILETYPE VFT_APP
 BEGIN
@@ -16,11 +16,11 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "LEMAG/UnB"
             VALUE "FileDescription", "ML ODONTO"
-            VALUE "FileVersion", "0.2.0"
+            VALUE "FileVersion", "0.3.0"
             VALUE "InternalName", "ML ODONTO"
             VALUE "OriginalFilename", "ML ODONTO.exe"
             VALUE "ProductName", "ML ODONTO"
-            VALUE "ProductVersion", "0.2.0"
+            VALUE "ProductVersion", "0.3.0"
         END
     END
     BLOCK "VarFileInfo"
