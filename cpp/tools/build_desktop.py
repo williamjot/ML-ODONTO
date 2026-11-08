@@ -25,6 +25,34 @@ ROOT = CPP.parent
 QT_VERSION = "6.8.3"
 
 
+THIRD_PARTY = """ML ODONTO — componentes de terceiros distribuídos nesta pasta
+
+Qt 6.8 (Qt6Core, Qt6Gui, Qt6Widgets, Qt6Sql, Qt6Network, Qt6Svg e plugins)
+  The Qt Company Ltd. e colaboradores. Licença GNU LGPL v3, usada por bibliotecas dinâmicas: estas DLLs
+  podem ser substituídas por outras versões compatíveis do Qt. Código-fonte e licença: https://www.qt.io/
+  e https://www.gnu.org/licenses/lgpl-3.0.html
+
+MinGW-w64 runtime (libstdc++-6, libgcc_s_seh-1, libwinpthread-1)
+  GCC Runtime Library Exception (libstdc++, libgcc) e licença MIT/ZPL (winpthreads).
+
+ONNX Runtime 1.31 (onnxruntime.dll, onnxruntime_providers_shared.dll)
+  Microsoft Corporation. Licença MIT. https://github.com/microsoft/onnxruntime
+
+webview 0.12 (compilado no programa)
+  Serge Zaitsev e colaboradores. Licença MIT. https://github.com/webview/webview
+
+Microsoft WebView2 SDK (cabeçalhos, compilado no programa)
+  Microsoft Corporation, licença do SDK do WebView2. O WebView2 Runtime faz parte do Windows 10/11.
+
+stb_image e stb_image_write
+  Sean Barrett. Domínio público.
+
+Modelo U-Net v2 (modelos/unet_lesoes_v2.onnx)
+  Treinado com o conjunto de Hanói (Mendeley Data, doi:10.17632/kx52tk2ddj.3, CC BY 4.0).
+  Uso acadêmico e não comercial, conforme a LICENSE do projeto ML ODONTO.
+"""
+
+
 def short(path: Path) -> str:
     """Nome curto 8.3 no Windows: o windres do MinGW não aceita espaços no próprio caminho."""
     import ctypes
@@ -87,6 +115,7 @@ def main() -> None:
     if not model.is_file():
         run(sys.executable, CPP / "tools" / "export_onnx.py", model.with_suffix(".safetensors"), model, "--verify")
     shutil.copy2(model, out / "modelos")
+    (out / "LICENCAS_TERCEIROS.txt").write_text(THIRD_PARTY, encoding="utf-8")
     size = sum(f.stat().st_size for f in out.rglob("*") if f.is_file()) / 1e6
     print(f"\nPronto: {out} ({size:.0f} MB). Abra 'ML ODONTO.exe'.")
 
